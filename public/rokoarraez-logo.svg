@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 50" fill="none">
+  <g id="isotipo" transform="translate(5, 0)">
+    <!-- Outer circle -->
+    <circle cx="25" cy="25" r="24" stroke="#3A5FA9" stroke-width="2" fill="none"/>
+    <!-- Inner R structure -->
+    <g transform="translate(10, 10)">
+      <!-- Vertical bar -->
+      <rect x="0" y="0" width="2.5" height="30" fill="#3A5FA9"/>
+      <!-- Top horizontal bar -->
+      <rect x="0" y="0" width="16" height="2.5" fill="#3A5FA9"/>
+      <!-- R curved part -->
+      <path d="M16,1.25 C22,1.25 26,5 26,10 C26,15 22,18.75 16,18.75 L0,18.75" fill="none" stroke="#3A5FA9" stroke-width="2.5"/>
+      <!-- R diagonal leg -->
+      <path d="M0,30 L16,14 L30,30" fill="none" stroke="#3A5FA9" stroke-width="2.5" stroke-linejoin="round"/>
+      <!-- Triangle accent -->
+      <polygon points="10,22 20,22 15,15" fill="#6DB753"/>
+    </g>
+    <!-- Bottom decorative arcs (purple) -->
+    <g>
+      <path d="M10,42 C10,38 13,36 16,36 C19,36 22,38 22,42" fill="none" stroke="#604897" stroke-width="2"/>
+      <path d="M18,42 C18,38 21,36 24,36 C27,36 30,38 30,42" fill="none" stroke="#604897" stroke-width="2"/>
+      <path d="M26,42 C26,38 29,36 32,36 C35,36 38,38 38,42" fill="none" stroke="#604897" stroke-width="2"/>
+      <!-- Dots -->
+      <circle cx="9" cy="44" r="1.5" fill="#604897"/>
+      <circle cx="40" cy="44" r="1.5" fill="#604897"/>
+    </g>
+  </g>
+  <!-- Text: ROKO ARRAEZ -->
+  <g transform="translate(62, 14)" fill="#3A5FA9">
+    <!-- R -->
+    <path d="M0,0 L0,24 M0,0 L10,0 C14,0 16,3 16,6 C16,9 14,12 10,12 L0,12 M10,12 L16,24" stroke="#3A5FA9" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    <!-- O -->
+    <ellipse cx="28" cy="12" rx="7" ry="12" stroke="#3A5FA9" stroke-width="2.2" fill="none"/>
+    <!-- K -->
+    <path d="M40,0 L40,24 M52,0 L40,12 L52,24" stroke="#3A5FA9" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    <!-- O -->
+    <ellipse cx="64" cy="12" rx="7" ry="12" stroke="#3A5FA9" stroke-width="2.2" fill="none"/>
+    <!-- space then A -->
+    <path d="M82,24 L89,0 L96,24 M84,16 L94,16" stroke="#3A5FA9" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    <!-- R -->
+    <path d="M102,0 L102,24 M102,0 L112,0 C116,0 118,3 118,6 C118,9 116,12 112,12 L102,12 M112,12 L118,24" stroke="#3A5FA9" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    <!-- R -->
+    <path d="M124,0 L124,24 M124,0 L134,0 C138,0 140,3 140,6 C140,9 138,12 134,12 L124,12 M134,12 L140,24" stroke="#3A5FA9" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    <!-- A -->
+    <path d="M146,24 L153,0 L160,24 M148,16 L158,16" stroke="#3A5FA9" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    <!-- E -->
+    <path d="M166,0 L178,0 M166,0 L166,24 M166,12 L176,12 M166,24 L178,24" stroke="#3A5FA9" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    <!-- Z -->
+    <path d="M184,0 L198,0 L184,24 L198,24" stroke="#3A5FA9" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>
