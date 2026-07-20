@@ -1291,11 +1291,18 @@
             grid-template-columns: 1fr;
             gap: 32px;
         }
-        @media (min-width: 1024px) {
+        @media (min-width: 768px) {
             [data-view="grid"] .works-page__section,
             [data-view="grid"].category-block__grid,
             [data-view="grid"] .category-block__grid {
                 grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        @media (min-width: 1200px) {
+            [data-view="grid"] .works-page__section,
+            [data-view="grid"].category-block__grid,
+            [data-view="grid"] .category-block__grid {
+                grid-template-columns: repeat(3, 1fr);
             }
         }
         [data-view="grid"] .project-card {
@@ -1353,6 +1360,13 @@
             [data-view="masonry"].category-block__grid,
             [data-view="masonry"] .category-block__grid {
                 column-count: 2;
+            }
+        }
+        @media (min-width: 1200px) {
+            [data-view="masonry"] .works-page__section,
+            [data-view="masonry"].category-block__grid,
+            [data-view="masonry"] .category-block__grid {
+                column-count: 3;
             }
         }
         [data-view="masonry"] .project-card {
