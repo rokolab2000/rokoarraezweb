@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ROKO — Product Designer</title>
+    <link rel="icon" type="image/png" href="/favicon.png">
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -342,7 +343,6 @@
             transform: translate(-10.4%, -10.4%) scale(1);
         }
 
-        /* Custom color accent hover overrides */
         .roko-cursor.is-turquoise {
             border-color: var(--turquoise) !important;
             background: rgba(0, 138, 148, 0.08) !important;
@@ -855,6 +855,20 @@
         .category-block__name { font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; transition: color var(--transition-theme); }
         .category-block__link { margin-left: auto; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); transition: color 0.2s ease; }
         .category-block__link:hover { color: var(--text-primary); }
+
+        .category-block__grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            column-gap: 40px;
+        }
+        @media (min-width: 1024px) {
+            .category-block__grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .category-block__grid .project-card {
+                padding: 32px 24px;
+            }
+        }
 
         .project-card { 
             position: relative; 
@@ -1444,14 +1458,48 @@
         .pagination-link {
             text-decoration: none;
             display: flex;
-            flex-direction: column;
-            gap: 6px;
-            max-width: 45%;
+            align-items: center;
+            gap: 16px;
+            max-width: 48%;
+            transition: transform 0.3s ease;
+        }
+
+        .pagination-link--prev {
+            flex-direction: row;
         }
 
         .pagination-link--next {
-            align-items: flex-end;
+            flex-direction: row-reverse;
             text-align: right;
+        }
+
+        .pagination-text-container {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .pagination-link--next .pagination-text-container {
+            align-items: flex-end;
+        }
+
+        .pagination-thumb-container {
+            width: 56px;
+            height: 56px;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid var(--border-base);
+            position: relative;
+            flex-shrink: 0;
+            background: var(--bg-surface);
+            transition: all 0.3s ease, border-color var(--transition-theme);
+        }
+
+        .pagination-thumb {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s ease;
         }
 
         .pagination-label {
@@ -1472,16 +1520,35 @@
             transition: color 0.3s ease;
         }
 
+        /* Hover States */
+        .pagination-link:hover {
+            transform: translateY(-2px);
+        }
+
         .pagination-link:hover .pagination-label {
             color: var(--text-primary);
         }
 
-        .pagination-link:hover .pagination-name {
+        .pagination-link--prev:hover .pagination-name {
             color: var(--purple);
         }
-        
+
         .pagination-link--next:hover .pagination-name {
             color: var(--turquoise);
+        }
+
+        .pagination-link--prev:hover .pagination-thumb-container {
+            border-color: var(--purple);
+            box-shadow: 0 4px 12px rgba(147, 51, 234, 0.15);
+        }
+
+        .pagination-link--next:hover .pagination-thumb-container {
+            border-color: var(--turquoise);
+            box-shadow: 0 4px 12px rgba(20, 184, 166, 0.15);
+        }
+
+        .pagination-link:hover .pagination-thumb {
+            transform: scale(1.1);
         }
 
         /* Bottom Back Button in Project Detail */
@@ -1600,6 +1667,21 @@
             overflow: hidden;
             background: var(--bg-base);
             transition: background var(--transition-theme), border-color var(--transition-theme);
+        }
+        .bio-section::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background-image: url('/bio-bg.jpg');
+            background-size: cover;
+            background-position: center;
+            opacity: 0.08;
+            z-index: 0;
+            pointer-events: none;
+            transition: filter var(--transition-theme);
+        }
+        [data-theme="dark"] .bio-section::before {
+            filter: invert(0.9) hue-rotate(180deg);
         }
 
         .bio-section__grid {
@@ -1813,9 +1895,30 @@
         }
 
         .bio-page__header {
-            padding: 0 var(--space-container) 64px;
+            padding: 40px var(--space-container) 64px;
             border-bottom: 1px solid var(--border-base);
+            position: relative;
+            overflow: hidden;
             transition: border-color var(--transition-theme);
+        }
+        .bio-page__header::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background-image: url('/bio-bg.jpg');
+            background-size: cover;
+            background-position: center;
+            opacity: 0.12;
+            z-index: 0;
+            pointer-events: none;
+            transition: filter var(--transition-theme);
+        }
+        [data-theme="dark"] .bio-page__header::before {
+            filter: invert(0.9) hue-rotate(180deg);
+        }
+        .bio-page__header > * {
+            position: relative;
+            z-index: 1;
         }
 
         .bio-page__label {
@@ -1913,17 +2016,19 @@
         }
 
         .bio-section-title {
-            font-size: 12px;
-            letter-spacing: 0.15em;
+            font-size: 15px;
+            letter-spacing: 0.12em;
             text-transform: uppercase;
             color: var(--turquoise);
             font-family: var(--font-mono);
+            font-weight: 600;
             border-bottom: 1px solid var(--border-subtle);
             padding-bottom: 8px;
+            margin: 0;
         }
 
         .bio-text {
-            font-size: 16px;
+            font-size: 15px;
             line-height: 1.8;
             color: var(--text-secondary);
             max-width: 800px;
@@ -2013,22 +2118,22 @@
         }
 
         .bio-process-main-title {
-            font-size: clamp(3rem, 6vw, 6rem);
+            font-size: var(--size-section);
             font-weight: 700;
-            line-height: 0.9;
+            line-height: 0.95;
             text-transform: uppercase;
-            letter-spacing: -0.03em;
+            letter-spacing: -0.02em;
             margin: 0;
             font-family: inherit;
         }
 
         .bio-process-subtitle {
-            font-size: 11px;
+            font-size: 13px;
             font-family: var(--font-mono);
-            letter-spacing: 0.15em;
+            letter-spacing: 0.12em;
             text-transform: uppercase;
             color: var(--text-muted);
-            max-width: 400px;
+            max-width: 450px;
             line-height: 1.6;
             margin: 0;
         }
@@ -2090,7 +2195,7 @@
         }
 
         .bio-process-name {
-            font-size: 22px;
+            font-size: 20px;
             font-weight: 700;
             letter-spacing: -0.01em;
             text-transform: uppercase;
@@ -2099,7 +2204,7 @@
         }
 
         .bio-process-desc {
-            font-size: 13px;
+            font-size: 14px;
             line-height: 1.7;
             color: var(--text-secondary);
             margin: 0;
@@ -2180,7 +2285,7 @@
         }
 
         .bio-clients-title {
-            font-size: clamp(2rem, 4vw, 3.5rem);
+            font-size: var(--size-section);
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: -0.02em;
@@ -2315,7 +2420,7 @@
     <div class="page is-active" id="page-home">
         <section class="split-hero" id="hero">
             <canvas class="particle-canvas" id="particleCanvas"></canvas>
-            <div class="hero-panel hero-panel--left" id="panelLeft" data-cursor="view" data-category="grafico">
+            <div class="hero-panel hero-panel--left" id="panelLeft" data-cursor="view" data-color="purple" data-category="grafico">
                 <div class="hero-panel__glow"></div>
                 <span class="hero-panel__badge">+7 años</span>
                 <span class="hero-panel__label">[01_Visual_Direction]</span>
@@ -2325,7 +2430,7 @@
                 </h2>
                 <p class="hero-panel__desc">Dirección de arte y comunicación visual. Creación de identidades memorables.</p>
             </div>
-            <div class="hero-panel hero-panel--right" id="panelRight" data-cursor="view" data-category="uxui">
+            <div class="hero-panel hero-panel--right" id="panelRight" data-cursor="view" data-color="turquoise" data-category="uxui">
                 <div class="hero-panel__glow"></div>
                 <span class="hero-panel__badge">+5 años</span>
                 <span class="hero-panel__label">[02_Product_Design]</span>
@@ -2396,6 +2501,8 @@
                         <span class="bio-stack__item" data-cursor="hover"><svg class="tool-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M13.9 2L24 22H18.9L15.3 14.8H8.7L5.1 22H0L10.1 2M12 5.8L9.9 10.8H14.1L12 5.8Z" /></svg>Adobe Creative Suite</span>
                         <span class="bio-stack__item" data-cursor="hover"><svg class="tool-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><path d="M8 8.5v7M8 12h3a2 2 0 0 0 0-4H8"/><path d="M13 14.5c0 .8.7 1.5 1.5 1.5.8 0 1.5-.7 1.5-1.5s-.7-1.5-1.5-1.5H14a1 1 0 0 1-1-1c0-.8.7-1.5 1.5-1.5.8 0 1.5.7 1.5 1.5"/></svg>Photoshop</span>
                         <span class="bio-stack__item" data-cursor="hover"><svg class="tool-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><path d="M7 15.5l2-6 2 6M8 13.5h2"/><path d="M15 9.5v6"/></svg>Illustrator</span>
+                        <span class="bio-stack__item" data-cursor="hover"><svg class="tool-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 22h20L12 2z"/><path d="M12 22V10"/><path d="M8 15h8"/></svg>Affinity</span>
+                        <span class="bio-stack__item" data-cursor="hover"><svg class="tool-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2v20"/><path d="M2 12h20"/></svg>Omni</span>
                         <span class="bio-stack__item" data-cursor="hover"><svg class="tool-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 10a6 6 0 1 0-6 6h6a3 3 0 0 0 3-3c0-1.5-1.5-3-3-3z"/><circle cx="12" cy="10" r="1"/></svg>Canva</span>
                         <span class="bio-stack__item" data-cursor="hover"><svg class="tool-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="9.8" y1="8.2" x2="20" y2="17"/><line x1="9.8" y1="15.8" x2="20" y2="7"/></svg>Capcut</span>
                         <span class="bio-stack__item" data-cursor="hover"><svg class="tool-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/><path d="M19 5l1.5 1.5L19 8l-1.5-1.5z"/></svg>Claude code</span>
@@ -2430,11 +2537,12 @@
             </div>
 
             <div class="category-block scroll-reveal" data-home-category="grafico">
-                <div class="category-block__header">
+                <div class="category-block__header" data-cursor="view" data-color="purple" style="cursor: pointer;">
                     <div class="category-block__dot category-block__dot--purple"></div>
                     <span class="category-block__name">Diseño Gráfico</span>
                     <a href="#" class="category-block__link" data-cursor="hover" data-page="works" data-filter="grafico">Ver todos →</a>
                 </div>
+                <div class="category-block__grid">
                 <article class="project-card" data-cursor="view" data-project="prism-visual" data-color="purple">
                     <div class="project-card__fill"></div>
                     <div class="project-card__content">
@@ -2526,14 +2634,146 @@
                     </div>
                     <div class="project-card__action"><span>View</span><span class="project-card__arrow">→</span></div>
                 </article>
+                <article class="project-card" data-cursor="view" data-project="bakersfield" data-color="purple">
+                    <div class="project-card__fill"></div>
+                    <div class="project-card__content">
+                        <div class="project-card__meta">
+                            <span class="project-card__year">2016</span>
+                            <span class="project-card__category project-card__category--purple">Diseño Gráfico</span>
+                            <span class="project-card__tag">Logo</span>
+                        </div>
+                        <h3 class="project-card__title">Bakersfield Alternative Health Center</h3>
+                        <p class="project-card__desc">Diseño de logo para centro dispensario de cannabis medicinal.</p>
+                    </div>
+                    <div class="project-card__action"><span>View</span><span class="project-card__arrow">→</span></div>
+                </article>
+                <article class="project-card" data-cursor="view" data-project="universe-soul" data-color="purple">
+                    <div class="project-card__fill"></div>
+                    <div class="project-card__content">
+                        <div class="project-card__meta">
+                            <span class="project-card__year">2016</span>
+                            <span class="project-card__category project-card__category--purple">Diseño Gráfico</span>
+                            <span class="project-card__tag">Logo</span>
+                        </div>
+                        <h3 class="project-card__title">Universe Of Soul</h3>
+                        <p class="project-card__desc">Diseño de logo para banda de rock progresivo.</p>
+                    </div>
+                    <div class="project-card__action"><span>View</span><span class="project-card__arrow">→</span></div>
+                </article>
+                <article class="project-card" data-cursor="view" data-project="covenant-coffee" data-color="purple">
+                    <div class="project-card__fill"></div>
+                    <div class="project-card__content">
+                        <div class="project-card__meta">
+                            <span class="project-card__year">2017</span>
+                            <span class="project-card__category project-card__category--purple">Diseño Gráfico</span>
+                            <span class="project-card__tag">Web / Branding</span>
+                        </div>
+                        <h3 class="project-card__title">Covenant Coffee</h3>
+                        <p class="project-card__desc">Branding, logotipo y diseño de tienda online e-commerce.</p>
+                    </div>
+                    <div class="project-card__action"><span>View</span><span class="project-card__arrow">→</span></div>
+                </article>
+                <article class="project-card" data-cursor="view" data-project="romas-ohana" data-color="purple">
+                    <div class="project-card__fill"></div>
+                    <div class="project-card__content">
+                        <div class="project-card__meta">
+                            <span class="project-card__year">2018</span>
+                            <span class="project-card__category project-card__category--purple">Diseño Gráfico</span>
+                            <span class="project-card__tag">Logo</span>
+                        </div>
+                        <h3 class="project-card__title">Romas Ohana</h3>
+                        <p class="project-card__desc">Diseño de logotipo a partir de lettering caligráfico cursiva personalizado.</p>
+                    </div>
+                    <div class="project-card__action"><span>View</span><span class="project-card__arrow">→</span></div>
+                </article>
+                <article class="project-card" data-cursor="view" data-project="dolcetto-caffe" data-color="purple">
+                    <div class="project-card__fill"></div>
+                    <div class="project-card__content">
+                        <div class="project-card__meta">
+                            <span class="project-card__year">2018</span>
+                            <span class="project-card__category project-card__category--purple">Diseño Gráfico</span>
+                            <span class="project-card__tag">Logo</span>
+                        </div>
+                        <h3 class="project-card__title">Dolcetto Caffe</h3>
+                        <p class="project-card__desc">Diseño de logotipo a partir de lettering caligráfico cursiva personalizado.</p>
+                    </div>
+                    <div class="project-card__action"><span>View</span><span class="project-card__arrow">→</span></div>
+                </article>
+                <article class="project-card" data-cursor="view" data-project="cabo-de-hornos" data-color="purple">
+                    <div class="project-card__fill"></div>
+                    <div class="project-card__content">
+                        <div class="project-card__meta">
+                            <span class="project-card__year">2018</span>
+                            <span class="project-card__category project-card__category--purple">Diseño Gráfico</span>
+                            <span class="project-card__tag">Video / RRSS</span>
+                        </div>
+                        <h3 class="project-card__title">Cabo de Hornos</h3>
+                        <p class="project-card__desc">Creación de video promocional y diseño de material para RRSS.</p>
+                    </div>
+                    <div class="project-card__action"><span>View</span><span class="project-card__arrow">→</span></div>
+                </article>
+                <article class="project-card" data-cursor="view" data-project="carolina-varela" data-color="purple">
+                    <div class="project-card__fill"></div>
+                    <div class="project-card__content">
+                        <div class="project-card__meta">
+                            <span class="project-card__year">2018</span>
+                            <span class="project-card__category project-card__category--purple">Diseño Gráfico</span>
+                            <span class="project-card__tag">Web / Mailing</span>
+                        </div>
+                        <h3 class="project-card__title">Carolina Varela</h3>
+                        <p class="project-card__desc">Diseño de mailing y landing page para campañas estéticas.</p>
+                    </div>
+                    <div class="project-card__action"><span>View</span><span class="project-card__arrow">→</span></div>
+                </article>
+                <article class="project-card" data-cursor="view" data-project="confuturo" data-color="purple">
+                    <div class="project-card__fill"></div>
+                    <div class="project-card__content">
+                        <div class="project-card__meta">
+                            <span class="project-card__year">2018</span>
+                            <span class="project-card__category project-card__category--purple">Diseño Gráfico</span>
+                            <span class="project-card__tag">Mailing / Infografía</span>
+                        </div>
+                        <h3 class="project-card__title">Confuturo</h3>
+                        <p class="project-card__desc">Diseño de mailings y mapas de procesos infográficos.</p>
+                    </div>
+                    <div class="project-card__action"><span>View</span><span class="project-card__arrow">→</span></div>
+                </article>
+                <article class="project-card" data-cursor="view" data-project="escapel" data-color="purple">
+                    <div class="project-card__fill"></div>
+                    <div class="project-card__content">
+                        <div class="project-card__meta">
+                            <span class="project-card__year">2018</span>
+                            <span class="project-card__category project-card__category--purple">Diseño Gráfico</span>
+                            <span class="project-card__tag">Web / UX/UI</span>
+                        </div>
+                        <h3 class="project-card__title">Escapel</h3>
+                        <p class="project-card__desc">Diseño web UX/UI y banners informativos de marca.</p>
+                    </div>
+                    <div class="project-card__action"><span>View</span><span class="project-card__arrow">→</span></div>
+                </article>
+                <article class="project-card" data-cursor="view" data-project="logofolio-2016" data-color="purple">
+                    <div class="project-card__fill"></div>
+                    <div class="project-card__content">
+                        <div class="project-card__meta">
+                            <span class="project-card__year">2016</span>
+                            <span class="project-card__category project-card__category--purple">Diseño Gráfico</span>
+                            <span class="project-card__tag">Logotipos</span>
+                        </div>
+                        <h3 class="project-card__title">Logofolio 2016</h3>
+                        <p class="project-card__desc">Colección de logotipos realizados para diversos clientes en el mundo.</p>
+                    </div>
+                    <div class="project-card__action"><span>View</span><span class="project-card__arrow">→</span></div>
+                </article>
+                </div>
             </div>
 
             <div class="category-block scroll-reveal" data-home-category="uxui">
-                <div class="category-block__header">
+                <div class="category-block__header" data-cursor="view" data-color="turquoise" style="cursor: pointer;">
                     <div class="category-block__dot category-block__dot--turquoise"></div>
                     <span class="category-block__name">Diseño UX / UI</span>
                     <a href="#" class="category-block__link" data-cursor="hover" data-page="works" data-filter="uxui">Ver todos →</a>
                 </div>
+                <div class="category-block__grid">
                 <article class="project-card project-card--turquoise" data-cursor="view" data-project="app-banca" data-color="turquoise">
                     <div class="project-card__fill"></div>
                     <div class="project-card__content">
@@ -2560,6 +2800,7 @@
                     </div>
                     <div class="project-card__action"><span>View</span><span class="project-card__arrow">→</span></div>
                 </article>
+                </div>
             </div>
 
             <div class="scroll-reveal" style="text-align: center; margin-top: 48px;">
@@ -2693,7 +2934,7 @@
             </div>
             <div class="works-page__content">
                 <section class="works-page__section" id="section-grafico" data-category="grafico">
-                    <div class="works-page__section-header scroll-reveal"><div class="works-page__section-dot works-page__section-dot--purple"></div><h2 class="works-page__section-title">Diseño Gráfico</h2><span class="works-page__section-count">(07 proyectos)</span></div>
+                    <div class="works-page__section-header scroll-reveal" data-cursor="view" data-color="purple" style="cursor: pointer;"><div class="works-page__section-dot works-page__section-dot--purple"></div><h2 class="works-page__section-title">Diseño Gráfico</h2><span class="works-page__section-count">(17 proyectos)</span></div>
                     <article class="project-card scroll-reveal" data-cursor="view" data-project="prism-visual" data-color="purple"><div class="project-card__fill"></div><div class="project-card__content"><div class="project-card__meta"><span class="project-card__year">2024</span><span class="project-card__category project-card__category--purple">Branding</span></div><h3 class="project-card__title">Prism Visual Campaign</h3><p class="project-card__desc">Campaña visual completa para marca de tecnología.</p></div><div class="project-card__action"><span>View</span><span class="project-card__arrow">→</span></div></article>
                     <article class="project-card scroll-reveal" data-cursor="view" data-project="memoria-anual" data-color="purple"><div class="project-card__fill"></div><div class="project-card__content"><div class="project-card__meta"><span class="project-card__year">2024</span><span class="project-card__category project-card__category--purple">Editorial</span></div><h3 class="project-card__title">Memoria Anual Corporativa</h3><p class="project-card__desc">Diseño editorial para memoria anual.</p></div><div class="project-card__action"><span>View</span><span class="project-card__arrow">→</span></div></article>
                     <article class="project-card scroll-reveal" data-cursor="view" data-project="bitacora-nando" data-color="purple"><div class="project-card__fill"></div><div class="project-card__content"><div class="project-card__meta"><span class="project-card__year">2013-2014</span><span class="project-card__category project-card__category--purple">Diseño Gráfico</span></div><h3 class="project-card__title">La Bitácora de Nando</h3><p class="project-card__desc">Dirección de arte, fondos y utilería para la serie animada de TV nacional.</p></div><div class="project-card__action"><span>View</span><span class="project-card__arrow">→</span></div></article>
@@ -2701,9 +2942,19 @@
                     <article class="project-card scroll-reveal" data-cursor="view" data-project="avita" data-color="purple"><div class="project-card__fill"></div><div class="project-card__content"><div class="project-card__meta"><span class="project-card__year">2016</span><span class="project-card__category project-card__category--purple">Diseño Gráfico</span></div><h3 class="project-card__title">Avita</h3><p class="project-card__desc">Diseño de logo para estudio de grabación.</p></div><div class="project-card__action"><span>View</span><span class="project-card__arrow">→</span></div></article>
                     <article class="project-card scroll-reveal" data-cursor="view" data-project="big-idea" data-color="purple"><div class="project-card__fill"></div><div class="project-card__content"><div class="project-card__meta"><span class="project-card__year">2016</span><span class="project-card__category project-card__category--purple">Diseño Gráfico</span></div><h3 class="project-card__title">43rd Big Idea</h3><p class="project-card__desc">Diseño de logo para productora audiovisual.</p></div><div class="project-card__action"><span>View</span><span class="project-card__arrow">→</span></div></article>
                     <article class="project-card scroll-reveal" data-cursor="view" data-project="yak-crew" data-color="purple"><div class="project-card__fill"></div><div class="project-card__content"><div class="project-card__meta"><span class="project-card__year">2016</span><span class="project-card__category project-card__category--purple">Diseño Gráfico</span></div><h3 class="project-card__title">Yak Crew</h3><p class="project-card__desc">Diseño de logo para equipo deportivo de pesca y kayakismo.</p></div><div class="project-card__action"><span>View</span><span class="project-card__arrow">→</span></div></article>
+                    <article class="project-card scroll-reveal" data-cursor="view" data-project="bakersfield" data-color="purple"><div class="project-card__fill"></div><div class="project-card__content"><div class="project-card__meta"><span class="project-card__year">2016</span><span class="project-card__category project-card__category--purple">Diseño Gráfico</span></div><h3 class="project-card__title">Bakersfield Alternative Health Center</h3><p class="project-card__desc">Diseño de logo para centro dispensario de cannabis medicinal.</p></div><div class="project-card__action"><span>View</span><span class="project-card__arrow">→</span></div></article>
+                    <article class="project-card scroll-reveal" data-cursor="view" data-project="universe-soul" data-color="purple"><div class="project-card__fill"></div><div class="project-card__content"><div class="project-card__meta"><span class="project-card__year">2016</span><span class="project-card__category project-card__category--purple">Diseño Gráfico</span></div><h3 class="project-card__title">Universe Of Soul</h3><p class="project-card__desc">Diseño de logo para banda de rock progresivo.</p></div><div class="project-card__action"><span>View</span><span class="project-card__arrow">→</span></div></article>
+                    <article class="project-card scroll-reveal" data-cursor="view" data-project="covenant-coffee" data-color="purple"><div class="project-card__fill"></div><div class="project-card__content"><div class="project-card__meta"><span class="project-card__year">2017</span><span class="project-card__category project-card__category--purple">Diseño Gráfico</span></div><h3 class="project-card__title">Covenant Coffee</h3><p class="project-card__desc">Branding, logotipo y diseño de tienda online e-commerce.</p></div><div class="project-card__action"><span>View</span><span class="project-card__arrow">→</span></div></article>
+                    <article class="project-card scroll-reveal" data-cursor="view" data-project="romas-ohana" data-color="purple"><div class="project-card__fill"></div><div class="project-card__content"><div class="project-card__meta"><span class="project-card__year">2018</span><span class="project-card__category project-card__category--purple">Diseño Gráfico</span></div><h3 class="project-card__title">Romas Ohana</h3><p class="project-card__desc">Diseño de logotipo a partir de lettering caligráfico cursiva personalizado.</p></div><div class="project-card__action"><span>View</span><span class="project-card__arrow">→</span></div></article>
+                    <article class="project-card scroll-reveal" data-cursor="view" data-project="dolcetto-caffe" data-color="purple"><div class="project-card__fill"></div><div class="project-card__content"><div class="project-card__meta"><span class="project-card__year">2018</span><span class="project-card__category project-card__category--purple">Diseño Gráfico</span></div><h3 class="project-card__title">Dolcetto Caffe</h3><p class="project-card__desc">Diseño de logotipo a partir de lettering caligráfico cursiva personalizado.</p></div><div class="project-card__action"><span>View</span><span class="project-card__arrow">→</span></div></article>
+                    <article class="project-card scroll-reveal" data-cursor="view" data-project="cabo-de-hornos" data-color="purple"><div class="project-card__fill"></div><div class="project-card__content"><div class="project-card__meta"><span class="project-card__year">2018</span><span class="project-card__category project-card__category--purple">Diseño Gráfico</span></div><h3 class="project-card__title">Cabo de Hornos</h3><p class="project-card__desc">Creación de video promocional y diseño de material para RRSS.</p></div><div class="project-card__action"><span>View</span><span class="project-card__arrow">→</span></div></article>
+                    <article class="project-card scroll-reveal" data-cursor="view" data-project="carolina-varela" data-color="purple"><div class="project-card__fill"></div><div class="project-card__content"><div class="project-card__meta"><span class="project-card__year">2018</span><span class="project-card__category project-card__category--purple">Diseño Gráfico</span></div><h3 class="project-card__title">Carolina Varela</h3><p class="project-card__desc">Diseño de mailing y landing page para campañas estéticas.</p></div><div class="project-card__action"><span>View</span><span class="project-card__arrow">→</span></div></article>
+                    <article class="project-card scroll-reveal" data-cursor="view" data-project="confuturo" data-color="purple"><div class="project-card__fill"></div><div class="project-card__content"><div class="project-card__meta"><span class="project-card__year">2018</span><span class="project-card__category project-card__category--purple">Diseño Gráfico</span></div><h3 class="project-card__title">Confuturo</h3><p class="project-card__desc">Diseño de mailings y mapas de procesos infográficos.</p></div><div class="project-card__action"><span>View</span><span class="project-card__arrow">→</span></div></article>
+                    <article class="project-card scroll-reveal" data-cursor="view" data-project="escapel" data-color="purple"><div class="project-card__fill"></div><div class="project-card__content"><div class="project-card__meta"><span class="project-card__year">2018</span><span class="project-card__category project-card__category--purple">Diseño Gráfico</span></div><h3 class="project-card__title">Escapel</h3><p class="project-card__desc">Diseño web UX/UI y banners informativos de marca.</p></div><div class="project-card__action"><span>View</span><span class="project-card__arrow">→</span></div></article>
+                    <article class="project-card scroll-reveal" data-cursor="view" data-project="logofolio-2016" data-color="purple"><div class="project-card__fill"></div><div class="project-card__content"><div class="project-card__meta"><span class="project-card__year">2016</span><span class="project-card__category project-card__category--purple">Diseño Gráfico</span></div><h3 class="project-card__title">Logofolio 2016</h3><p class="project-card__desc">Colección de logotipos realizados para diversos clientes en el mundo.</p></div><div class="project-card__action"><span>View</span><span class="project-card__arrow">→</span></div></article>
                 </section>
                 <section class="works-page__section" id="section-uxui" data-category="uxui">
-                    <div class="works-page__section-header scroll-reveal"><div class="works-page__section-dot works-page__section-dot--turquoise"></div><h2 class="works-page__section-title">Diseño UX / UI</h2><span class="works-page__section-count">(02 proyectos)</span></div>
+                    <div class="works-page__section-header scroll-reveal" data-cursor="view" data-color="turquoise" style="cursor: pointer;"><div class="works-page__section-dot works-page__section-dot--turquoise"></div><h2 class="works-page__section-title">Diseño UX / UI</h2><span class="works-page__section-count">(02 proyectos)</span></div>
                     <article class="project-card project-card--turquoise scroll-reveal" data-cursor="view" data-project="app-banca" data-color="turquoise"><div class="project-card__fill"></div><div class="project-card__content"><div class="project-card__meta"><span class="project-card__year">2024</span><span class="project-card__category project-card__category--turquoise">UX/UI</span></div><h3 class="project-card__title">App Banca Digital</h3><p class="project-card__desc">Diseño de experiencia para banca móvil.</p></div><div class="project-card__action"><span>View</span><span class="project-card__arrow">→</span></div></article>
                     <article class="project-card project-card--turquoise scroll-reveal" data-cursor="view" data-project="dashboard-analytics" data-color="turquoise"><div class="project-card__fill"></div><div class="project-card__content"><div class="project-card__meta"><span class="project-card__year">2024</span><span class="project-card__category project-card__category--turquoise">Dashboard</span></div><h3 class="project-card__title">Dashboard Analytics</h3><p class="project-card__desc">Plataforma de analytics para e-commerce.</p></div><div class="project-card__action"><span>View</span><span class="project-card__arrow">→</span></div></article>
                 </section>
@@ -2726,7 +2977,7 @@
                     <!-- Profile Column (Image) -->
                     <div class="bio-profile-left">
                         <div class="bio-avatar-container">
-                            <img src="/roko_avatar.png" alt="Roko Avatar" class="bio-avatar-img" />
+                            <img src="/roko_avatar.jpg" alt="Roko Avatar" class="bio-avatar-img" />
                             <div class="bio-avatar-glow"></div>
                         </div>
                     </div>
@@ -2735,19 +2986,21 @@
                     <div class="bio-profile-right">
                         <!-- Short bio paragraph -->
                         <div class="bio-section-block">
-                            <h2 class="bio-section-title">// Biografía</h2>
+                            <h3 class="bio-section-title">// Biografía</h3>
                             <p class="bio-text">
                                 Soy Product Designer apasionado por conceptualizar y crear soluciones digitales integrales. Me especializo en fusionar la creatividad artística y la dirección visual con una mentalidad orientada a resultados técnicos y de negocio. Con más de 7 años en diseño gráfico y 5 años enfocados en diseño de experiencia de usuario (UX/UI), enfoco cada proyecto desde la empatía y la rigurosidad.
                             </p>
                         </div>
 
                         <div class="bio-section-block">
-                            <h2 class="bio-section-title">// Herramientas</h2>
+                            <h3 class="bio-section-title">// Herramientas</h3>
                             <div class="tool-tags-list">
                                 <span class="tool-tag" data-cursor="hover"><svg class="tool-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 5.5A2.5 2.5 0 0 1 7.5 3h3a2.5 2.5 0 0 1 2.5 2.5V8H7.5A2.5 2.5 0 0 1 5 5.5z"/><path d="M12 5.5A2.5 2.5 0 0 1 14.5 3h3A2.5 2.5 0 0 1 20 5.5V8h-5A2.5 2.5 0 0 1 12 5.5z"/><path d="M5 12a2.5 2.5 0 0 1 2.5-2.5H12V14H7.5A2.5 2.5 0 0 1 5 12z"/><path d="M12 9.5a2.5 2.5 0 0 1 2.5 2.5v0a2.5 2.5 0 0 1-2.5 2.5H12V9.5z"/><path d="M5 18.5a2.5 2.5 0 0 1 2.5-2.5H12v3a2.5 2.5 0 0 1-2.5 2.5h0A2.5 2.5 0 0 1 5 18.5z"/></svg>Figma</span>
                                 <span class="tool-tag" data-cursor="hover"><svg class="tool-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M13.9 2L24 22H18.9L15.3 14.8H8.7L5.1 22H0L10.1 2M12 5.8L9.9 10.8H14.1L12 5.8Z" /></svg>Adobe Creative Suite</span>
                                 <span class="tool-tag" data-cursor="hover"><svg class="tool-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><path d="M8 8.5v7M8 12h3a2 2 0 0 0 0-4H8"/><path d="M13 14.5c0 .8.7 1.5 1.5 1.5.8 0 1.5-.7 1.5-1.5s-.7-1.5-1.5-1.5H14a1 1 0 0 1-1-1c0-.8.7-1.5 1.5-1.5.8 0 1.5.7 1.5 1.5"/></svg>Photoshop</span>
                                 <span class="tool-tag" data-cursor="hover"><svg class="tool-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><path d="M7 15.5l2-6 2 6M8 13.5h2"/><path d="M15 9.5v6"/></svg>Illustrator</span>
+                                <span class="tool-tag" data-cursor="hover"><svg class="tool-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 22h20L12 2z"/><path d="M12 22V10"/><path d="M8 15h8"/></svg>Affinity</span>
+                                <span class="tool-tag" data-cursor="hover"><svg class="tool-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2v20"/><path d="M2 12h20"/></svg>Omni</span>
                                 <span class="tool-tag" data-cursor="hover"><svg class="tool-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 10a6 6 0 1 0-6 6h6a3 3 0 0 0 3-3c0-1.5-1.5-3-3-3z"/><circle cx="12" cy="10" r="1"/></svg>Canva</span>
                                 <span class="tool-tag" data-cursor="hover"><svg class="tool-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="9.8" y1="8.2" x2="20" y2="17"/><line x1="9.8" y1="15.8" x2="20" y2="7"/></svg>Capcut</span>
                                 <span class="tool-tag" data-cursor="hover"><svg class="tool-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/><path d="M19 5l1.5 1.5L19 8l-1.5-1.5z"/></svg>Claude code</span>
@@ -2761,7 +3014,7 @@
 
                         <!-- Interests & Methodologies -->
                         <div class="bio-section-block">
-                            <h2 class="bio-section-title">// Metodologías e Intereses</h2>
+                            <h3 class="bio-section-title">// Metodologías e Intereses</h3>
                             <div class="tool-tags-list">
                                 <span class="methodology-tag" data-cursor="hover">Design System</span>
                                 <span class="methodology-tag" data-cursor="hover">Atomic Design</span>
@@ -2771,7 +3024,7 @@
 
                         <!-- Philosophy / Passion -->
                         <div class="bio-section-block">
-                            <h2 class="bio-section-title">// Filosofía de vida / Pasión</h2>
+                            <h3 class="bio-section-title">// Filosofía de vida / Pasión</h3>
                             <p class="bio-text">
                                 Creo que el diseño no es solo cómo se ve un producto, sino cómo se siente y cómo funciona para resolver problemas reales del ser humano. Mi pasión es la experimentación visual y la evolución constante, buscando siempre el equilibrio perfecto entre la funcionalidad técnica y la belleza minimalista. Mi filosofía se basa en el aprendizaje interactivo constante, empujando los límites de las herramientas digitales para crear valor duradero.
                             </p>
@@ -3350,6 +3603,202 @@
                     { label: '04 / Propuesta B - Versión Lineal', alt: 'Segunda propuesta de logotipo lineal del kayak con cañas de pescar cruzadas.', layout: 'wide', image: '/yakcrew-4.jpg' },
                     { label: '05 / Propuesta B - Versión Color', alt: 'Segunda propuesta final a color con tonos verde bosque y dorado.', layout: 'wide', image: '/yakcrew-5.jpg' }
                 ] 
+            },
+            'bakersfield': { 
+                title: 'Bakersfield Alternative Health Center', 
+                category: 'Diseño Gráfico', 
+                categoryType: 'purple', 
+                client: 'Bakersfield Alternative Health Center', 
+                role: 'Director Creativo', 
+                year: '2016', 
+                location: 'California - USA',
+                tags: ['Logotipo', 'Lettering', 'Branding'], 
+                tools: ['Photoshop', 'Illustrator', 'Wacom Intuos'],
+                previewImage: '/bakersfield-3.jpg',
+                description: 'Diseño de identidad visual y logotipo para dispensario de cannabis medicinal en California, USA. El proyecto presenta tres propuestas de diseño combinando el caduceo clásico de salud con alas estilizadas de hojas de cannabis e integrando tipografías de bloque y lettering cursiva de pincel manual.', 
+                gallery: [
+                    { label: '01 / Propuesta A - Tipografía de Bloque', alt: 'Isologotipo con alas de cannabis detalladas en color verde y azul con tipografía sans-serif de bloque.', layout: 'wide', image: '/bakersfield-1.jpg' }, 
+                    { label: '02 / Propuesta B - Caduceo Lineal', alt: 'Isologotipo minimalista lineal que muestra el caduceo coronado por una sola hoja de cannabis en tonos limpios.', layout: 'wide', image: '/bakersfield-2.jpg' },
+                    { label: '03 / Propuesta C - Tipografía Lettering', alt: 'Propuesta final con las alas de cannabis e integrando tipografía cursiva fluida de estilo pincel manual.', layout: 'wide', image: '/bakersfield-3.jpg' }
+                ] 
+            },
+            'universe-soul': { 
+                title: 'Universe Of Soul', 
+                category: 'Diseño Gráfico', 
+                categoryType: 'purple', 
+                client: 'Bakersfield Alternative Health Center', 
+                role: 'Director Creativo', 
+                year: '2016', 
+                location: 'Mérida - VE',
+                tags: ['Logotipo', 'Lettering', 'Branding'], 
+                tools: ['Photoshop', 'Illustrator', 'Wacom Intuos'],
+                previewImage: '/unisoul-2.jpg',
+                description: 'Diseño de logotipo para banda de rock progresivo. El proyecto muestra una variada exploración conceptual a lápiz con símbolos místicos y astronómicos, y concluye en dos propuestas finales: una tipográfica gótica y tridimensional en acabado cromo, y una orgánica en lettering caligráfico fluido.', 
+                gallery: [
+                    { label: '01 / Hoja de Bocetos Conceptuales', alt: 'Panel de exploración con 16 ideas a mano alzada para la banda, incluyendo calaveras, estrellas y monogramas.', layout: 'wide', image: '/unisoul-1.jpg' }, 
+                    { label: '02 / Propuesta A - Logotipo Gótico Metálico', alt: 'Isologotipo tridimensional con acabado metálico cromado y brillos cian sobre fondos blanco y negro.', layout: 'wide', image: '/unisoul-2.jpg' },
+                    { label: '03 / Propuesta B - Lettering Caligráfico Cromo', alt: 'Detalle de la firma orgánica con textura metálica sobre un fondo de acero rayado e industrial.', layout: 'wide', image: '/unisoul-3.jpg' },
+                    { label: '04 / Propuesta B - Variaciones Cromáticas', alt: 'Vistas del logotipo caligráfico sobre texturas oscuras y en color plano negro y blanco.', layout: 'wide', image: '/unisoul-4.jpg' },
+                    { label: '05 / Propuesta B - Estructura Vectorial', alt: 'Esquema de trazos vectoriales y espaciado de la firma de Universe of Souls.', layout: 'wide', image: '/unisoul-5.jpg' }
+                ] 
+            },
+            'covenant-coffee': { 
+                title: 'Covenant Coffee', 
+                category: 'Diseño Gráfico', 
+                categoryType: 'purple', 
+                client: 'Covenant Coffee', 
+                role: 'Director Creativo, Diseñador Gráfico', 
+                year: '2017', 
+                location: 'California - USA',
+                website: 'https://www.covenantcoffee.org/',
+                tags: ['Logotipo', 'Lettering', 'Branding', 'Diseño Web'], 
+                tools: ['Photoshop', 'Illustrator', 'WordPress', 'WooCommerce'],
+                previewImage: '/covenant-2.jpg',
+                description: 'Diseño de identidad de marca, logotipo y plataforma de comercio electrónico para Covenant Coffee en California, USA. El proyecto abarcó desde una exploración inicial de 9 conceptos de logotipos circulares y tradicionales, hasta el desarrollo del sitio web oficial auto-administrable con pasarela de pago para la venta de café, apoyando a jóvenes en hogares de acogida (foster youth).', 
+                gallery: [
+                    { label: '01 / Matriz de Propuestas de Logotipo', alt: 'Hoja de propuestas de diseño con 9 opciones de logotipos redondos, escudos y sellos vintage para la marca.', layout: 'wide', image: '/covenant-1.jpg' }, 
+                    { label: '02 / Logotipo Final Seleccionado', alt: 'Sello circular final en blanco y negro con la inscripción Covenant Coffee, ESTD 2010 y el lema Hope in a cup!.', layout: 'wide', image: '/covenant-2.jpg' },
+                    { label: '03 / Diseño de Web E-Commerce', alt: 'Mockup del sitio web autoadministrable sobre WordPress y WooCommerce, con diseño responsivo, catálogo de café y secciones institucionales.', layout: 'wide', image: '/covenant-3.png' }
+                ] 
+            },
+            'romas-ohana': { 
+                title: 'Romas Ohana', 
+                category: 'Diseño Gráfico', 
+                categoryType: 'purple', 
+                client: 'Romas Ohana', 
+                role: 'Director Creativo', 
+                year: '2018', 
+                location: 'Santiago - Chile',
+                tags: ['Logotipo', 'Lettering', 'Branding'], 
+                tools: ['Photoshop', 'Illustrator', 'Wacom Intuos'],
+                previewImage: '/romas-3.jpg',
+                description: 'Diseño de logotipo para Romas Ohana en Santiago, Chile. El proyecto se basa en la creación de un logotipo a partir de lettering caligráfico cursiva fluido y gestual personalizado, enmarcado en una composición circular clásica y moderna con sutiles detalles geométricos, explorando distintas paletas cromáticas vibrantes y fondos texturizados.', 
+                gallery: [
+                    { label: '01 / Logotipo Plano Monocromático', alt: 'Isologotipo en tinta negra plana sobre un fondo blanco limpio, resaltando la pureza del trazo caligráfico.', layout: 'wide', image: '/romas-1.jpg' }, 
+                    { label: '02 / Logotipo Versión Color Sólido', alt: 'Composición tipográfica en morado y turquesa planos sobre fondo blanco, combinando los colores de identidad.', layout: 'wide', image: '/romas-2.jpg' },
+                    { label: '03 / Logotipo Versión Gradiente', alt: 'Logotipo con gradiente suave y dinámico de turquesa a morado sobre un fondo blanco neutro.', layout: 'wide', image: '/romas-3.jpg' },
+                    { label: '04 / Aplicación sobre Fondo con Gradiente', alt: 'Logotipo final en negativo blanco aplicado sobre un fondo con gradiente continuo y fluido de turquesa a morado.', layout: 'wide', image: '/romas-4.jpg' }
+                ] 
+            },
+            'dolcetto-caffe': { 
+                title: 'Dolcetto Caffe', 
+                category: 'Diseño Gráfico', 
+                categoryType: 'purple', 
+                client: 'Dolcetto Caffe', 
+                role: 'Director Creativo', 
+                year: '2018', 
+                location: 'Santiago - Chile',
+                tags: ['Logotipo', 'Lettering', 'Branding'], 
+                tools: ['Photoshop', 'Illustrator', 'Wacom Intuos'],
+                previewImage: '/dolcetto-3.jpg',
+                description: 'Diseño de logotipo para Dolcetto Caffe en Santiago, Chile. El proyecto abarcó desde una extensa exploración de bocetos a lápiz y carboncillo con más de 15 propuestas, integrando caligrafías cursivas dinámicas y siluetas de tazas de café, hasta el desarrollo final del isologotipo vectorial corporativo y sus guías de aplicación cromática en azul marino y terracota.', 
+                gallery: [
+                    { label: '01 / Matriz de Bocetos a Mano Alzada', alt: 'Hoja de propuestas y exploración formal a lápiz con 15 conceptos caligráficos e ilustraciones de tazas para la marca.', layout: 'wide', image: '/dolcetto-1.jpg' }, 
+                    { label: '02 / Lettering Finalizado en Tinta', alt: 'Trazado final en tinta negra del logotipo Dolcetto Caffe junto a la taza estilizada humeante sobre fondo blanco.', layout: 'wide', image: '/dolcetto-2.jpg' },
+                    { label: '03 / Isologotipo Versión Color Corporativa', alt: 'Isologotipo vectorial finalizado en colores corporativos azul marino y terracota sobre fondo blanco.', layout: 'wide', image: '/dolcetto-3.jpg' },
+                    { label: '04 / Guía de Variaciones Cromáticas', alt: 'Panel de marca mostrando la aplicación del logotipo en negativo y positivo sobre bloques azul marino y terracota.', layout: 'wide', image: '/dolcetto-4.jpg' },
+                    { label: '05 / Montaje sobre Imagen Contextualizada', alt: 'Logotipo en negativo blanco aplicado sobre una fotografía difuminada de panadería y café en una cafetería.', layout: 'wide', image: '/dolcetto-5.jpg' }
+                ] 
+            },
+            'cabo-de-hornos': { 
+                title: 'Cabo de Hornos', 
+                category: 'Diseño Gráfico', 
+                categoryType: 'purple', 
+                client: 'Cabo de Hornos', 
+                role: 'Director Creativo', 
+                year: '2018', 
+                location: 'Punta Arenas - Chile',
+                tags: ['Edición'], 
+                tools: ['Photoshop', 'Premiere'],
+                previewImage: '/cabo-cover.jpg',
+                localVideo: '/cabo-video.mp4',
+                description: 'Diseño de material audiovisual para redes sociales y creación de video promocional para el Hotel Cabo de Hornos en Punta Arenas, Chile. El proyecto consistió en la edición de video cinematográfico y diseño de contenido digital dinámico en stop-motion para campañas de marketing en RRSS.', 
+                gallery: [
+                    { label: '01 / Video Promocional Stop-Motion', alt: 'Video de stop-motion o reel promocional complementario para redes sociales.', layout: 'wide', video: '/cabo-video-2.mp4' }, 
+                    { label: '02 / Portada Cabo de Hornos', alt: 'Vista de portada o frame promocional del hotel Cabo de Hornos.', layout: 'wide', image: '/cabo-cover.jpg' },
+                    { label: '03 / Loop Animado Stop-Motion', alt: 'Loop animado promocional optimizado para feed de Instagram.', layout: 'wide', video: '/cabo-gif.mp4' }
+                ] 
+            },
+            'carolina-varela': { 
+                title: 'Carolina Varela', 
+                category: 'Diseño Gráfico', 
+                categoryType: 'purple', 
+                client: 'Carolina Varela - Agencia Frame', 
+                role: 'Director Creativo', 
+                year: '2018', 
+                location: 'Santiago - Chile',
+                tags: ['Marketing', 'Mailing', 'Landing Page'], 
+                tools: ['Photoshop', 'WordPress', 'Mailchimp'],
+                previewImage: '/carolina-3.png',
+                description: 'Diseño de campañas de e-mail marketing (mailing) y landing pages de captación para la clínica de estética y salud Carolina Varela, en Santiago de Chile. El proyecto abarcó la dirección de arte y composición visual de boletines publicitarios promocionales orientados a la conversión e integrados con Mailchimp y WordPress.', 
+                gallery: [
+                    { label: '01 / Diseño de Mailing Fiestas Patrias', alt: 'Boletín de correo electrónico promocional con temática del 18 de septiembre en Chile, mostrando empanadas y decoración nacional.', layout: 'wide', image: '/carolina-1.png' }, 
+                    { label: '02 / Diseño de Mailing Corporativo Salud', alt: 'Propuesta alternativa de boletín publicitario enfocado en tratamientos estéticos corporales de la clínica.', layout: 'wide', image: '/carolina-2.png' },
+                    { label: '03 / Diseño de Landing Page de Captación', alt: 'Captura de pantalla de la página de aterrizaje promocional con formulario de contacto integrado y lista de tratamientos.', layout: 'wide', image: '/carolina-3.png' }
+                ] 
+            },
+            'confuturo': { 
+                title: 'Confuturo', 
+                category: 'Diseño Gráfico', 
+                categoryType: 'purple', 
+                client: 'Confuturo - Agencia Frame', 
+                role: 'Director Creativo', 
+                year: '2018', 
+                location: 'Santiago - Chile',
+                tags: ['Marketing', 'Mailing', 'Infografía'], 
+                tools: ['Photoshop', 'Mailchimp'],
+                previewImage: '/confuturo-3.png',
+                description: 'Diseño de infografías corporativas de mapas de procesos y campañas de boletines de e-mail marketing (mailing) para la aseguradora Confuturo, en Santiago de Chile. El proyecto consistió en simplificar flujos complejos de procesos de apoyo y de negocio en mapas visuales de fácil comprensión, y en estructurar boletines informativos de alta efectividad.', 
+                gallery: [
+                    { label: '01 / Mapa de Procesos de Apoyo', alt: 'Infografía corporativa detallando el mapa de procesos de soporte y administración de Confuturo.', layout: 'wide', image: '/confuturo-1.jpg' }, 
+                    { label: '02 / Mapa de Procesos de Negocio', alt: 'Infografía de diagrama de flujo ilustrando los procesos principales y de atención al cliente de la compañía.', layout: 'wide', image: '/confuturo-2.jpg' },
+                    { label: '03 / Boletín de Email Marketing', alt: 'Diseño de newsletter corporativa "En Vitrina" con las novedades relevantes de la semana y secciones informativas.', layout: 'wide', image: '/confuturo-3.png' }
+                ] 
+            },
+            'escapel': { 
+                title: 'Escapel', 
+                category: 'Diseño Gráfico', 
+                categoryType: 'purple', 
+                client: 'Escapel - Agencia Frame', 
+                role: 'Director Creativo', 
+                year: '2018', 
+                location: 'Santiago - Chile',
+                tags: ['Marketing', 'Mailing', 'Diseño Web', 'UX/UI'], 
+                tools: ['Photoshop', 'WordPress'],
+                previewImage: '/escapel-3.jpg',
+                description: 'Diseño de sitio web informativo y banners publicitarios para Escapel de la farmacéutica Gedeon Richter, en Santiago de Chile. El proyecto abarcó el diseño de interfaz de usuario (UI) responsiva, la estructuración del flujo de información en formato slider y la dirección de arte de piezas publicitarias orientadas a la concientización y educación sobre anticoncepción de emergencia.', 
+                gallery: [
+                    { label: '01 / Slider - Información de OMS', alt: 'Pantalla del sitio web destacando que es el método anticonceptivo de emergencia más efectivo según la OMS.', layout: 'wide', image: '/escapel-1.jpg' }, 
+                    { label: '02 / Slider - Campaña Movilidad', alt: 'Pantalla promocional aconsejando llevar siempre el anticonceptivo junto con la billetera y el celular.', layout: 'wide', image: '/escapel-2.jpg' },
+                    { label: '03 / Slider - Decisión Femenina', alt: 'Detalle de banner promocional con el lema: Aquí la decisión es mía.', layout: 'wide', image: '/escapel-3.jpg' },
+                    { label: '04 / Slider - Autonomía y Elección', alt: 'Detalle de banner alternativo destacando la frase: No quiero esperar, es mi decisión.', layout: 'wide', image: '/escapel-4.jpg' },
+                    { label: '05 / Slider - Eficacia Temporal', alt: 'Infografía web informando sobre el 98% de eficacia si se toma antes de las 72 horas del acto sexual desprotegido.', layout: 'wide', image: '/escapel-5.jpg' },
+                    { label: '06 / Slider - La Decisión es Tuya', alt: 'Pantalla promocional e informativa del sitio web con el lema: La decisión es tuya, mostrando reproductor de video integrado.', layout: 'wide', image: '/escapel-6.jpg' }
+                ] 
+            },
+            'logofolio-2016': { 
+                title: 'Logofolio 2016', 
+                category: 'Diseño Gráfico', 
+                categoryType: 'purple', 
+                client: 'Agencia Worlinty', 
+                role: 'Director Creativo', 
+                year: '2016', 
+                location: 'Mérida - Venezuela',
+                tags: ['Logotipo'], 
+                tools: ['Photoshop', 'Illustrator'],
+                previewImage: '/logofolio-1.jpg',
+                description: 'Colección de logotipos e identidades visuales creados para diversos clientes internacionales durante mi rol como Director Creativo en la agencia Worlinty, en Mérida, Venezuela. Cada logotipo fue desarrollado a partir de una profunda conceptualización geométrica, tipografía personalizada y adaptación cromática específica para cada industria.', 
+                gallery: [
+                    { label: '01 / Biergarten Precopeo', alt: 'Diseño de isologotipo circular estilo sello para Biergarten Precopeo, integrando una jarra de cerveza caligráfica en tonos turquesa y azul marino.', layout: 'wide', image: '/logofolio-1.jpg' }, 
+                    { label: '02 / Black Girl Adventure Quest', alt: 'Propuesta tipográfica y gráfica de estilo caligráfico fluido con montañas ilustradas para Black Girl Adventure Quest en tonos magenta y blanco.', layout: 'wide', image: '/logofolio-2.jpg' },
+                    { label: '03 / Colchones Pamplona', alt: 'Diseño de logotipo corporativo minimalista para Colchones Pamplona, con isotipo de ondas y tipografía cursiva fluida en colores azul y gris.', layout: 'wide', image: '/logofolio-3.jpg' },
+                    { label: '04 / Inspection Report', alt: 'Diseño de imagotipo corporativo para Inspection Report, integrando un visto de aprobación dinámico con un gráfico de barras ascendente en tonos azules y blanco.', layout: 'wide', image: '/logofolio-4.jpg' },
+                    { label: '05 / Sistema Emprendedor Online', alt: 'Diseño de imagotipo para Sistema Emprendedor Online, con isotipo de esfera tridimensional texturizada en gradiente azul y verde turquesa.', layout: 'wide', image: '/logofolio-5.jpg' },
+                    { label: '06 / Roman Ceron', alt: 'Diseño de isologotipo circular para Roman Ceron, combinando las iniciales R y C en trazo blanco sobre círculo azul.', layout: 'wide', image: '/logofolio-6.jpg' },
+                    { label: '07 / Comprar Online', alt: 'Diseño de logotipo e isotipo con forma de carrito de compras veloz y flecha de cursor en turquesa y gris para Comprar Online.', layout: 'wide', image: '/logofolio-7.jpg' },
+                    { label: '08 / Pawszle', alt: 'Diseño de imagotipo minimalista para Pawszle, con isotipo en forma de pin de ubicación fusionado con pieza de rompecabezas y huella de mascota en azul y rojo.', layout: 'wide', image: '/logofolio-8.jpg' },
+                    { label: '09 / Shurmonkey', alt: 'Diseño de imagotipo corporativo para Shurmonkey, con ilustración vectorial de mono estilizado con peinado crestado en color negro sobre fondo naranja.', layout: 'wide', image: '/logofolio-9.jpg' }
+                ] 
             }
         };
 
@@ -3387,6 +3836,10 @@
                 if (type === 'view') {
                     if (t.classList.contains('project-card') || t.closest('.project-card') || t.closest('.gallery-grid')) {
                         cursorText.textContent = 'Ver proyecto';
+                    } else if (t.classList.contains('category-block__header') || t.closest('.category-block__header') || 
+                               t.classList.contains('works-page__section-header') || t.closest('.works-page__section-header') ||
+                               t.classList.contains('hero-panel') || t.closest('.hero-panel')) {
+                        cursorText.textContent = 'ver Proyectos';
                     } else {
                         cursorText.textContent = 'Zoom';
                     }
@@ -3540,6 +3993,8 @@
             const nextId = keys[nextIndex];
             const prevName = projects[prevId].title;
             const nextName = projects[nextId].title;
+            const prevThumb = projects[prevId].previewImage || (projects[prevId].gallery && projects[prevId].gallery[0] && projects[prevId].gallery[0].image) || '';
+            const nextThumb = projects[nextId].previewImage || (projects[nextId].gallery && projects[nextId].gallery[0] && projects[nextId].gallery[0].image) || '';
             
             // Generate location metadata if available
             let locationHTML = '';
@@ -3548,6 +4003,21 @@
                     <div class="project-detail__meta-item">
                         <span class="meta-item-label">Lugar</span>
                         <span class="meta-item-value">${project.location}</span>
+                    </div>
+                `;
+            }
+
+            // Generate website metadata if available
+            let websiteHTML = '';
+            if (project.website) {
+                websiteHTML = `
+                    <div class="project-detail__meta-item">
+                        <span class="meta-item-label">Sitio Web</span>
+                        <span class="meta-item-value">
+                            <a href="${project.website}" target="_blank" rel="noopener noreferrer" style="color: var(--${color}); text-decoration: underline;" data-cursor="hover">
+                                ${project.website.replace('https://', '').replace('http://', '').replace('www.', '')}
+                            </a>
+                        </span>
                     </div>
                 `;
             }
@@ -3570,11 +4040,36 @@
                 }
             }
 
+            // Generate local video player if available
+            let localVideoHTML = '';
+            if (project.localVideo) {
+                localVideoHTML = `
+                    <div class="project-detail__video-container scroll-reveal" style="margin-bottom: 48px; border-radius: 12px; overflow: hidden; border: 1px solid var(--border-base); width: 100%;">
+                        <video controls style="width: 100%; display: block; border-radius: 12px; outline: none; background: #000;" poster="${project.previewImage || ''}">
+                            <source src="${project.localVideo}" type="video/mp4">
+                            Tu navegador no soporta reproducción de video.
+                        </video>
+                    </div>
+                `;
+            }
+
             // Generate gallery items (up to 6 items)
             let galleryHTML = '<div class="project-detail__gallery-grid">';
             project.gallery.forEach(item => {
                 const layoutClass = item.layout === 'wide' ? 'gallery-col--wide' : 'gallery-col--detail';
-                if (item.image) {
+                if (item.video) {
+                    galleryHTML += `
+                        <div class="gallery-col ${layoutClass}">
+                            <div class="gallery-placeholder-img" style="background: transparent; aspect-ratio: auto; height: auto; border: none; padding: 0;">
+                                <video controls style="width: 100%; display: block; border-radius: 12px; border: 1px solid var(--border-base); outline: none; background: #000;">
+                                    <source src="${item.video}" type="video/mp4">
+                                    Tu navegador no soporta reproducción de video.
+                                </video>
+                            </div>
+                            <span class="gallery-alt-text">alt: ${item.alt}</span>
+                        </div>
+                    `;
+                } else if (item.image) {
                     galleryHTML += `
                         <div class="gallery-col ${layoutClass}">
                             <div class="gallery-placeholder-img" style="background: transparent; aspect-ratio: auto; height: auto; border: none; padding: 0;" data-cursor="view">
@@ -3626,6 +4121,7 @@
                                 <span class="meta-item-value">${project.year}</span>
                             </div>
                             ${locationHTML}
+                            ${websiteHTML}
                             <div class="project-detail__meta-item">
                                 <span class="meta-item-label">Categoría</span>
                                 <span class="meta-item-value">${project.category}</span>
@@ -3652,19 +4148,30 @@
                         <!-- Grid de 2 columnas: Imagen principal (Wide) + Imagen secundaria (Detail) -->
                         <!-- Incluir atributos 'alt' descriptivos para accesibilidad e indexación de IA -->
                         ${videoHTML}
+                        ${localVideoHTML}
                         ${galleryHTML}
                     </section>
 
                     <nav class="pagination project-detail__pagination scroll-reveal">
                         <!-- Navegación: ANTERIOR / SIGUIENTE con nombres de proyectos -->
                         <a href="#" class="pagination-link pagination-link--prev" data-target-id="${prevId}" data-cursor="hover">
-                            <span class="pagination-label">← Anterior</span>
-                            <span class="pagination-name">${prevName}</span>
+                            <div class="pagination-thumb-container">
+                                <img class="pagination-thumb" src="${prevThumb}" alt="${prevName}">
+                            </div>
+                            <div class="pagination-text-container">
+                                <span class="pagination-label">← Anterior</span>
+                                <span class="pagination-name">${prevName}</span>
+                            </div>
                         </a>
                         <div class="pagination-divider">|</div>
                         <a href="#" class="pagination-link pagination-link--next" data-target-id="${nextId}" data-cursor="hover">
-                            <span class="pagination-label">Siguiente →</span>
-                            <span class="pagination-name">${nextName}</span>
+                            <div class="pagination-text-container">
+                                <span class="pagination-label">Siguiente →</span>
+                                <span class="pagination-name">${nextName}</span>
+                            </div>
+                            <div class="pagination-thumb-container">
+                                <img class="pagination-thumb" src="${nextThumb}" alt="${nextName}">
+                            </div>
                         </a>
                     </nav>
                     
@@ -3723,6 +4230,27 @@
             if (pageLink && !e.target.closest('.project-card')) { e.preventDefault(); closeMenu(); const filter = pageLink.dataset.filter || null; navigateTo(pageLink.dataset.page, filter); }
             const sectionLink = e.target.closest('[data-section]');
             if (sectionLink) { e.preventDefault(); closeMenu(); if (currentPage !== 'home') { navigateTo('home'); setTimeout(() => { const section = document.getElementById(sectionLink.dataset.section); if (section) section.scrollIntoView({ behavior: 'smooth' }); }, 600); } else { const section = document.getElementById(sectionLink.dataset.section); if (section) section.scrollIntoView({ behavior: 'smooth' }); } }
+            
+            // Home page category header click
+            const homeHeader = e.target.closest('.category-block__header');
+            if (homeHeader && !e.target.closest('.category-block__link')) {
+                e.preventDefault();
+                const link = homeHeader.querySelector('.category-block__link');
+                if (link) {
+                    const filter = link.dataset.filter || null;
+                    navigateTo('works', filter);
+                }
+            }
+            
+            // Works page section header click
+            const worksHeader = e.target.closest('.works-page__section-header');
+            if (worksHeader) {
+                e.preventDefault();
+                const section = worksHeader.closest('.works-page__section');
+                if (section && section.dataset.category) {
+                    applyFilter(section.dataset.category);
+                }
+            }
         });
 
         // ═══════════════════════════════════════════════════════════════════
