@@ -1181,6 +1181,221 @@
         .filter-tab.is-active--turquoise { background: var(--turquoise); color: #0a0a0f; border-color: var(--turquoise); }
 
         /* ═══════════════════════════════════════════════════════════════════
+           PROJECTS VIEW SWITCHER (Grid, List, Masonry)
+           ═══════════════════════════════════════════════════════════════════ */
+        .works-page__controls-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+            margin-bottom: 48px;
+            padding: 0 var(--space-container);
+            flex-wrap: wrap;
+        }
+        .works-page__controls-bar .works-page__filters {
+            margin-bottom: 0;
+            padding: 0;
+        }
+
+        .view-switcher {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-base);
+            border-radius: 9999px;
+            backdrop-filter: blur(12px);
+            transition: border-color var(--transition-theme);
+        }
+        .view-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border-radius: 9999px;
+            border: 1px solid transparent;
+            background: transparent;
+            color: var(--text-muted);
+            font-size: 11px;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .view-btn svg {
+            transition: transform 0.2s ease, stroke 0.2s ease;
+        }
+        .view-btn:hover {
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.06);
+        }
+        .view-btn.is-active {
+            background: var(--text-primary);
+            color: var(--bg-base);
+            border-color: var(--text-primary);
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+        }
+        .view-btn.is-active svg {
+            stroke: var(--bg-base);
+        }
+
+        /* View Switching Animation State */
+        .view-switching {
+            opacity: 0 !important;
+            transform: translateY(10px) scale(0.99) !important;
+            transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1), transform 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+        }
+        .works-page__content, .category-block__grid {
+            transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1), transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* 1. LIST VIEW STYLES */
+        [data-view="list"] .works-page__section,
+        [data-view="list"].category-block__grid,
+        [data-view="list"] .category-block__grid {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        [data-view="list"] .project-card {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+            padding: 24px 16px;
+            border-bottom: 1px solid var(--border-base);
+            border-radius: 0;
+            background: transparent;
+            box-shadow: none;
+            transition: background 0.3s ease, padding 0.3s ease, border-color 0.3s ease;
+        }
+        [data-view="list"] .project-card:hover {
+            background: rgba(255, 255, 255, 0.02);
+            padding-left: 24px;
+            padding-right: 24px;
+        }
+        [data-view="list"] .project-card__thumb-mobile {
+            display: none !important;
+        }
+        [data-view="list"] .project-card__desc {
+            display: none;
+        }
+
+        /* 2. GRID VIEW STYLES (Symmetric 16:9) */
+        [data-view="grid"] .works-page__section,
+        [data-view="grid"].category-block__grid,
+        [data-view="grid"] .category-block__grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 32px;
+        }
+        @media (min-width: 1024px) {
+            [data-view="grid"] .works-page__section,
+            [data-view="grid"].category-block__grid,
+            [data-view="grid"] .category-block__grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        [data-view="grid"] .project-card {
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            padding: 24px;
+            border: 1px solid var(--border-base);
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.02);
+            transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        [data-view="grid"] .project-card:hover {
+            transform: translateY(-6px);
+            border-color: var(--purple);
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.3);
+        }
+        [data-view="grid"] .project-card--turquoise:hover {
+            border-color: var(--turquoise);
+        }
+        [data-view="grid"] .project-card__thumb-mobile {
+            display: block !important;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            height: auto;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            order: -1;
+        }
+        [data-view="grid"] .project-card__thumb-mobile img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        [data-view="grid"] .project-card:hover .project-card__thumb-mobile img {
+            transform: scale(1.05);
+        }
+        [data-view="grid"] .project-card__desc {
+            display: -webkit-box;
+            margin-top: 8px;
+        }
+
+        /* 3. MASONRY VIEW STYLES (Dynamic aspect ratio, uncropped) */
+        [data-view="masonry"] .works-page__section,
+        [data-view="masonry"].category-block__grid,
+        [data-view="masonry"] .category-block__grid {
+            column-count: 1;
+            column-gap: 32px;
+            display: block;
+        }
+        @media (min-width: 768px) {
+            [data-view="masonry"] .works-page__section,
+            [data-view="masonry"].category-block__grid,
+            [data-view="masonry"] .category-block__grid {
+                column-count: 2;
+            }
+        }
+        [data-view="masonry"] .project-card {
+            break-inside: avoid;
+            display: inline-block;
+            width: 100%;
+            margin-bottom: 32px;
+            padding: 24px;
+            border: 1px solid var(--border-base);
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.02);
+            transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        [data-view="masonry"] .project-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--purple);
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.3);
+        }
+        [data-view="masonry"] .project-card--turquoise:hover {
+            border-color: var(--turquoise);
+        }
+        [data-view="masonry"] .project-card__thumb-mobile {
+            display: block !important;
+            width: 100%;
+            aspect-ratio: auto;
+            height: auto;
+            max-height: none;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+        [data-view="masonry"] .project-card__thumb-mobile img {
+            width: 100%;
+            height: auto;
+            object-fit: contain;
+            display: block;
+        }
+        [data-view="masonry"] .project-card__desc {
+            display: -webkit-box;
+            margin-top: 8px;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════
            PROJECT DETAIL PAGE HIERARCHY
            ═══════════════════════════════════════════════════════════════════ */
         .project-detail {
@@ -2940,10 +3155,44 @@
                 <h1 class="works-page__title scroll-reveal">Proyectos</h1>
                 <p class="works-page__desc scroll-reveal">Selección de proyectos de diseño gráfico, branding, UX/UI y desarrollo web.</p>
             </header>
-            <div class="works-page__filters">
-                <button class="filter-tab is-active" data-filter="all" data-cursor="hover">Todos</button>
-                <button class="filter-tab" data-filter="grafico" data-cursor="hover">Diseño Gráfico</button>
-                <button class="filter-tab" data-filter="uxui" data-cursor="hover">UX / UI</button>
+            <div class="works-page__controls-bar">
+                <div class="works-page__filters">
+                    <button class="filter-tab is-active" data-filter="all" data-cursor="hover">Todos</button>
+                    <button class="filter-tab" data-filter="grafico" data-cursor="hover">Diseño Gráfico</button>
+                    <button class="filter-tab" data-filter="uxui" data-cursor="hover">UX / UI</button>
+                </div>
+
+                <div class="view-switcher" role="group" aria-label="Cambiar vista de proyectos">
+                    <button class="view-btn is-active" data-view="grid" title="Vista Cuadrícula (16:9)" data-cursor="hover" aria-label="Vista Cuadrícula">
+                        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="3" width="7" height="7" rx="1"/>
+                            <rect x="14" y="3" width="7" height="7" rx="1"/>
+                            <rect x="14" y="14" width="7" height="7" rx="1"/>
+                            <rect x="3" y="14" width="7" height="7" rx="1"/>
+                        </svg>
+                        <span>Grid</span>
+                    </button>
+                    <button class="view-btn" data-view="list" title="Vista Lista Minimalista" data-cursor="hover" aria-label="Vista Lista">
+                        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="8" y1="6" x2="21" y2="6"/>
+                            <line x1="8" y1="12" x2="21" y2="12"/>
+                            <line x1="8" y1="18" x2="21" y2="18"/>
+                            <circle cx="4" cy="6" r="1.5" fill="currentColor"/>
+                            <circle cx="4" cy="12" r="1.5" fill="currentColor"/>
+                            <circle cx="4" cy="18" r="1.5" fill="currentColor"/>
+                        </svg>
+                        <span>Lista</span>
+                    </button>
+                    <button class="view-btn" data-view="masonry" title="Vista Mampostería (Masonry)" data-cursor="hover" aria-label="Vista Masonry">
+                        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="3" width="7" height="11" rx="1"/>
+                            <rect x="14" y="3" width="7" height="6" rx="1"/>
+                            <rect x="14" y="12" width="7" height="9" rx="1"/>
+                            <rect x="3" y="17" width="7" height="4" rx="1"/>
+                        </svg>
+                        <span>Masonry</span>
+                    </button>
+                </div>
             </div>
             <div class="works-page__content">
                 <section class="works-page__section" id="section-grafico" data-category="grafico">
@@ -4555,6 +4804,50 @@
             });
         }
         initMobileThumbnails();
+
+        // Initialize View Switcher (Grid, List, Masonry)
+        function initViewSwitcher() {
+            const viewButtons = document.querySelectorAll('.view-btn');
+            if (!viewButtons.length) return;
+
+            const savedView = localStorage.getItem('roko_project_view') || 'grid';
+            setView(savedView, false);
+
+            viewButtons.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const targetView = btn.dataset.view;
+                    if (targetView) setView(targetView, true);
+                });
+            });
+
+            function setView(viewName, animate = true) {
+                const containers = document.querySelectorAll('.works-page__content, .category-block__grid');
+                
+                viewButtons.forEach(b => {
+                    if (b.dataset.view === viewName) {
+                        b.classList.add('is-active');
+                    } else {
+                        b.classList.remove('is-active');
+                    }
+                });
+
+                localStorage.setItem('roko_project_view', viewName);
+
+                if (animate) {
+                    containers.forEach(c => c.classList.add('view-switching'));
+                    setTimeout(() => {
+                        containers.forEach(c => {
+                            c.setAttribute('data-view', viewName);
+                            c.classList.remove('view-switching');
+                        });
+                    }, 200);
+                } else {
+                    containers.forEach(c => c.setAttribute('data-view', viewName));
+                }
+            }
+        }
+        initViewSwitcher();
     </script>
 </body>
 </html>
