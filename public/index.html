@@ -2741,6 +2741,37 @@
                 <div>
                     <div class="works-preview__label">// Selected_Works</div>
                     <h2 class="works-preview__title">Proyectos</h2>
+                    <div class="view-switcher" role="group" aria-label="Cambiar vista de proyectos" style="margin-top: 16px;">
+                        <button class="view-btn is-active" data-view="list" title="Vista Lista Minimalista" data-cursor="hover" aria-label="Vista Lista">
+                            <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="8" y1="6" x2="21" y2="6"/>
+                                <line x1="8" y1="12" x2="21" y2="12"/>
+                                <line x1="8" y1="18" x2="21" y2="18"/>
+                                <circle cx="4" cy="6" r="1.5" fill="currentColor"/>
+                                <circle cx="4" cy="12" r="1.5" fill="currentColor"/>
+                                <circle cx="4" cy="18" r="1.5" fill="currentColor"/>
+                            </svg>
+                            <span>Lista</span>
+                        </button>
+                        <button class="view-btn" data-view="grid" title="Vista Cuadrícula (16:9)" data-cursor="hover" aria-label="Vista Cuadrícula">
+                            <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="3" width="7" height="7" rx="1"/>
+                                <rect x="14" y="3" width="7" height="7" rx="1"/>
+                                <rect x="14" y="14" width="7" height="7" rx="1"/>
+                                <rect x="3" y="14" width="7" height="7" rx="1"/>
+                            </svg>
+                            <span>Grid</span>
+                        </button>
+                        <button class="view-btn" data-view="masonry" title="Vista Mampostería (Masonry)" data-cursor="hover" aria-label="Vista Masonry">
+                            <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="3" width="7" height="11" rx="1"/>
+                                <rect x="14" y="3" width="7" height="6" rx="1"/>
+                                <rect x="14" y="12" width="7" height="9" rx="1"/>
+                                <rect x="3" y="17" width="7" height="4" rx="1"/>
+                            </svg>
+                            <span>Masonry</span>
+                        </button>
+                    </div>
                 </div>
                 <a href="#" class="works-preview__link" data-cursor="hover" data-page="works">Ver todos <span class="arrow">→</span></a>
             </div>
@@ -3154,25 +3185,9 @@
                 <div class="works-page__label scroll-reveal">// Works_Archive</div>
                 <h1 class="works-page__title scroll-reveal">Proyectos</h1>
                 <p class="works-page__desc scroll-reveal">Selección de proyectos de diseño gráfico, branding, UX/UI y desarrollo web.</p>
-            </header>
-            <div class="works-page__controls-bar">
-                <div class="works-page__filters">
-                    <button class="filter-tab is-active" data-filter="all" data-cursor="hover">Todos</button>
-                    <button class="filter-tab" data-filter="grafico" data-cursor="hover">Diseño Gráfico</button>
-                    <button class="filter-tab" data-filter="uxui" data-cursor="hover">UX / UI</button>
-                </div>
 
-                <div class="view-switcher" role="group" aria-label="Cambiar vista de proyectos">
-                    <button class="view-btn is-active" data-view="grid" title="Vista Cuadrícula (16:9)" data-cursor="hover" aria-label="Vista Cuadrícula">
-                        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <rect x="3" y="3" width="7" height="7" rx="1"/>
-                            <rect x="14" y="3" width="7" height="7" rx="1"/>
-                            <rect x="14" y="14" width="7" height="7" rx="1"/>
-                            <rect x="3" y="14" width="7" height="7" rx="1"/>
-                        </svg>
-                        <span>Grid</span>
-                    </button>
-                    <button class="view-btn" data-view="list" title="Vista Lista Minimalista" data-cursor="hover" aria-label="Vista Lista">
+                <div class="view-switcher scroll-reveal" role="group" aria-label="Cambiar vista de proyectos" style="margin-top: 24px;">
+                    <button class="view-btn is-active" data-view="list" title="Vista Lista Minimalista" data-cursor="hover" aria-label="Vista Lista">
                         <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <line x1="8" y1="6" x2="21" y2="6"/>
                             <line x1="8" y1="12" x2="21" y2="12"/>
@@ -3182,6 +3197,15 @@
                             <circle cx="4" cy="18" r="1.5" fill="currentColor"/>
                         </svg>
                         <span>Lista</span>
+                    </button>
+                    <button class="view-btn" data-view="grid" title="Vista Cuadrícula (16:9)" data-cursor="hover" aria-label="Vista Cuadrícula">
+                        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="3" width="7" height="7" rx="1"/>
+                            <rect x="14" y="3" width="7" height="7" rx="1"/>
+                            <rect x="14" y="14" width="7" height="7" rx="1"/>
+                            <rect x="3" y="14" width="7" height="7" rx="1"/>
+                        </svg>
+                        <span>Grid</span>
                     </button>
                     <button class="view-btn" data-view="masonry" title="Vista Mampostería (Masonry)" data-cursor="hover" aria-label="Vista Masonry">
                         <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -3193,6 +3217,11 @@
                         <span>Masonry</span>
                     </button>
                 </div>
+            </header>
+            <div class="works-page__filters" style="margin-top: 32px;">
+                <button class="filter-tab is-active" data-filter="all" data-cursor="hover">Todos</button>
+                <button class="filter-tab" data-filter="grafico" data-cursor="hover">Diseño Gráfico</button>
+                <button class="filter-tab" data-filter="uxui" data-cursor="hover">UX / UI</button>
             </div>
             <div class="works-page__content">
                 <section class="works-page__section" id="section-grafico" data-category="grafico">
