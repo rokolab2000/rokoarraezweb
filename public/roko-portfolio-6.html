@@ -2902,6 +2902,18 @@
                             <textarea id="formMessage" name="message" class="form-textarea" required data-cursor="hover"></textarea>
                         </div>
 
+                        <!-- Honeypot -->
+                        <div class="form-group" style="display: none !important;">
+                            <input type="text" id="formHoneypot" name="honeypot_field" tabindex="-1" autocomplete="off">
+                        </div>
+
+                        <!-- CAPTCHA -->
+                        <div class="form-group captcha-group" style="margin-bottom: 24px;">
+                            <label class="form-label" for="formCaptcha">Seguridad: ¿Cuánto es <span id="captchaQuestion" style="font-weight: bold; color: var(--text-highlight);"></span>? *</label>
+                            <input type="number" id="formCaptcha" class="form-input" placeholder="Resuelve la suma" required data-cursor="hover">
+                            <div id="captchaError" class="form-error-msg" style="color: #ff4a4a; font-size: 0.85rem; margin-top: 8px; display: none; font-family: monospace;">[!] Error: Respuesta incorrecta.</div>
+                        </div>
+
                         <button type="submit" class="form-submit" data-cursor="hover">
                             <span class="form-submit__fill"></span>
                             <span class="form-submit__text">Enviar mensaje</span>
@@ -3284,6 +3296,18 @@
                             <div class="form-group">
                                 <label class="form-label" for="formMessageBio">Cuéntanos tu proyecto</label>
                                 <textarea id="formMessageBio" name="message" class="form-textarea" required data-cursor="hover"></textarea>
+                            </div>
+
+                            <!-- Honeypot Bio -->
+                            <div class="form-group" style="display: none !important;">
+                                <input type="text" id="formHoneypotBio" name="honeypot_field" tabindex="-1" autocomplete="off">
+                            </div>
+
+                            <!-- CAPTCHA Bio -->
+                            <div class="form-group captcha-group" style="margin-bottom: 24px;">
+                                <label class="form-label" for="formCaptchaBio">Seguridad: ¿Cuánto es <span id="captchaQuestionBio" style="font-weight: bold; color: var(--text-highlight);"></span>? *</label>
+                                <input type="number" id="formCaptchaBio" class="form-input" placeholder="Resuelve la suma" required data-cursor="hover">
+                                <div id="captchaErrorBio" class="form-error-msg" style="color: #ff4a4a; font-size: 0.85rem; margin-top: 8px; display: none; font-family: monospace;">[!] Error: Respuesta incorrecta.</div>
                             </div>
 
                             <button type="submit" class="form-submit" data-cursor="hover">
@@ -4284,6 +4308,35 @@
         // ═══════════════════════════════════════════════════════════════════
         // CONTACT FORM
         // ═══════════════════════════════════════════════════════════════════
+        let captchaAnswer = 0;
+        let captchaAnswerBio = 0;
+
+        function generateCaptcha() {
+            const num1 = Math.floor(Math.random() * 9) + 1;
+            const num2 = Math.floor(Math.random() * 9) + 1;
+            captchaAnswer = num1 + num2;
+            const questionEl = document.getElementById('captchaQuestion');
+            if (questionEl) questionEl.textContent = num1 + ' + ' + num2;
+            
+            const inputEl = document.getElementById('formCaptcha');
+            if (inputEl) inputEl.value = '';
+            const errorEl = document.getElementById('captchaError');
+            if (errorEl) errorEl.style.display = 'none';
+        }
+
+        function generateCaptchaBio() {
+            const num1 = Math.floor(Math.random() * 9) + 1;
+            const num2 = Math.floor(Math.random() * 9) + 1;
+            captchaAnswerBio = num1 + num2;
+            const questionEl = document.getElementById('captchaQuestionBio');
+            if (questionEl) questionEl.textContent = num1 + ' + ' + num2;
+            
+            const inputEl = document.getElementById('formCaptchaBio');
+            if (inputEl) inputEl.value = '';
+            const errorEl = document.getElementById('captchaErrorBio');
+            if (errorEl) errorEl.style.display = 'none';
+        }
+
         const contactForm = document.getElementById('contactForm');
         const formSuccess = document.getElementById('formSuccess');
         const resetFormBtn = document.getElementById('resetForm');
@@ -4312,8 +4365,27 @@
             });
         });
 
+        generateCaptcha();
+
         contactForm?.addEventListener('submit', (e) => {
             e.preventDefault();
+            
+            // Honeypot check
+            const honeypotVal = document.getElementById('formHoneypot')?.value;
+            if (honeypotVal) {
+                console.warn('Bot detected via honeypot.');
+                return;
+            }
+            
+            // CAPTCHA check
+            const userCaptchaVal = parseInt(document.getElementById('formCaptcha')?.value || '0', 10);
+            const errorEl = document.getElementById('captchaError');
+            if (userCaptchaVal !== captchaAnswer) {
+                if (errorEl) errorEl.style.display = 'block';
+                return;
+            }
+            
+            if (errorEl) errorEl.style.display = 'none';
             contactForm.style.display = 'none';
             formSuccess?.classList.add('is-visible');
         });
@@ -4325,6 +4397,7 @@
             priorityPills.forEach(p => p.classList.remove('is-active'));
             if (hiddenInterest) hiddenInterest.value = '';
             if (hiddenPriority) hiddenPriority.value = '';
+            generateCaptcha();
             if (contactForm) contactForm.style.display = 'flex';
             formSuccess?.classList.remove('is-visible');
         });
@@ -4358,8 +4431,27 @@
             });
         });
 
+        generateCaptchaBio();
+
         contactFormBio?.addEventListener('submit', (e) => {
             e.preventDefault();
+            
+            // Honeypot check
+            const honeypotVal = document.getElementById('formHoneypotBio')?.value;
+            if (honeypotVal) {
+                console.warn('Bot detected via honeypot.');
+                return;
+            }
+            
+            // CAPTCHA check
+            const userCaptchaVal = parseInt(document.getElementById('formCaptchaBio')?.value || '0', 10);
+            const errorEl = document.getElementById('captchaErrorBio');
+            if (userCaptchaVal !== captchaAnswerBio) {
+                if (errorEl) errorEl.style.display = 'block';
+                return;
+            }
+            
+            if (errorEl) errorEl.style.display = 'none';
             contactFormBio.style.display = 'none';
             formSuccessBio?.classList.add('is-visible');
         });
@@ -4371,6 +4463,7 @@
             priorityPillsBio.forEach(p => p.classList.remove('is-active'));
             if (hiddenInterestBio) hiddenInterestBio.value = '';
             if (hiddenPriorityBio) hiddenPriorityBio.value = '';
+            generateCaptchaBio();
             if (contactFormBio) contactFormBio.style.display = 'flex';
             formSuccessBio?.classList.remove('is-visible');
         });
