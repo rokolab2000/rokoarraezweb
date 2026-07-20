@@ -1,0 +1,32 @@
+# ----------------------------------------------------------------------
+# 1. FORZAR CONEXIÓN HTTPS SEGURA
+# ----------------------------------------------------------------------
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteCond %{HTTPS} off
+    RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+</IfModule>
+
+# ----------------------------------------------------------------------
+# 2. BLOQUEO DE ARCHIVOS OCULTOS Y CONFIGURACIÓN
+# ----------------------------------------------------------------------
+RedirectMatch 403 /\..*$
+<FilesMatch "^\.">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# ----------------------------------------------------------------------
+# 3. CABECERAS DE SEGURIDAD HTTP Y CONTENT SECURITY POLICY (CSP)
+# ----------------------------------------------------------------------
+<IfModule mod_headers.c>
+    # Cabeceras de protección básicas
+    Header set X-Frame-Options "DENY"
+    Header set X-Content-Type-Options "nosniff"
+    Header set Referrer-Policy "strict-origin-when-cross-origin"
+    Header set Permissions-Policy "camera=(), microphone=(), geolocation=()"
+    Header set Strict-Transport-Security "max-age=63072000; includeSubDomains; preload"
+    
+    # Content Security Policy (Ajustada para CDNs y embeds de YouTube)
+    Header set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; media-src 'self'; frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com; frame-ancestors 'none'; object-src 'none';"
+</IfModule>
