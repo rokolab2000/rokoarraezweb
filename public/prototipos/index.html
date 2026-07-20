@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ROKO — Handoff Dashboard Launcher</title>
+    <link rel="icon" type="image/png" href="/favicon.png">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-base: #050508;
+            --bg-surface: #0c0c12;
+            --bg-surface-hover: #12121e;
+            --text-primary: #ffffff;
+            --text-muted: #8e90a6;
+            --text-disabled: #4e5066;
+            
+            --accent-cyan: #00c8d4;
+            --accent-purple: #8b5ab1;
+            --accent-white: #ffffff;
+            
+            --border-subtle: rgba(255, 255, 255, 0.06);
+            --border-hover: rgba(255, 255, 255, 0.15);
+            
+            --font-display: 'Space Grotesk', -apple-system, sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+            
+            --radius-md: 12px;
+            --radius-sm: 6px;
+            --transition-smooth: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-base);
+            color: var(--text-primary);
+            font-family: var(--font-display);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(139, 90, 177, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(0, 200, 212, 0.06) 0%, transparent 40%);
+            background-attachment: fixed;
+        }
+
+        /* Noise effect overlay */
+        .noise {
+            position: fixed;
+            inset: 0;
+            opacity: 0.02;
+            pointer-events: none;
+            z-index: 9999;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        header {
+            margin-bottom: 4rem;
+            border-bottom: 1px solid var(--border-subtle);
+            padding-bottom: 2.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+
+        .header-title h1 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 700;
+            letter-spacing: -0.04em;
+            line-height: 1.1;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(to right, #fff 40%, var(--text-muted) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header-title p {
+            font-family: var(--font-mono);
+            font-size: 0.875rem;
+            color: var(--accent-cyan);
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+        }
+
+        .header-info {
+            text-align: right;
+            font-family: var(--font-mono);
+            font-size: 0.8125rem;
+            color: var(--text-muted);
+        }
+
+        .header-info span {
+            color: var(--text-primary);
+        }
+
+        /* Filter Controls */
+        .filters {
+            display: flex;
+            gap: 0.75rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            background: transparent;
+            border: 1px solid var(--border-subtle);
+            color: var(--text-muted);
+            padding: 0.6rem 1.2rem;
+            border-radius: 9999px;
+            font-family: var(--font-mono);
+            font-size: 0.8125rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+        }
+
+        .filter-btn:hover {
+            border-color: var(--border-hover);
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .filter-btn.active {
+            background: var(--text-primary);
+            color: var(--bg-base);
+            border-color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        /* Grid Layout */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 2rem;
+            margin-bottom: 5rem;
+        }
+
+        @media (max-width: 480px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Card Component */
+        .card {
+            background-color: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            padding: 2.2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 280px;
+            text-decoration: none;
+            color: inherit;
+            position: relative;
+            overflow: hidden;
+            transition: var(--transition-smooth);
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: transparent;
+            transition: var(--transition-smooth);
+        }
+
+        .card:hover {
+            background-color: var(--bg-surface-hover);
+            border-color: var(--border-hover);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .card.creative:hover::before {
+            background: linear-gradient(90deg, var(--accent-white), var(--accent-cyan));
+        }
+
+        .card.premium:hover::before {
+            background: linear-gradient(90deg, var(--accent-purple), var(--accent-cyan));
+        }
+
+        .card.standard:hover::before {
+            background: linear-gradient(90deg, var(--text-muted), var(--text-primary));
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+        }
+
+        .badge {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            border: 1px solid;
+            font-weight: 500;
+        }
+
+        .card.creative .badge {
+            color: var(--accent-cyan);
+            border-color: rgba(0, 200, 212, 0.2);
+            background: rgba(0, 200, 212, 0.05);
+        }
+
+        .card.premium .badge {
+            color: var(--accent-purple);
+            border-color: rgba(139, 90, 177, 0.2);
+            background: rgba(139, 90, 177, 0.05);
+        }
+
+        .card.standard .badge {
+            color: var(--text-muted);
+            border-color: rgba(142, 144, 166, 0.2);
+            background: rgba(142, 144, 166, 0.05);
+        }
+
+        .screen-num {
+            font-family: var(--font-mono);
+            font-size: 0.8125rem;
+            color: var(--text-disabled);
+        }
+
+        .card-body h2 {
+            font-size: 1.75rem;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            margin-bottom: 0.75rem;
+            line-height: 1.2;
+            transition: var(--transition-smooth);
+        }
+
+        .card:hover h2 {
+            color: #ffffff;
+        }
+
+        .card-body p {
+            color: var(--text-muted);
+            font-size: 0.9375rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-family: var(--font-mono);
+            font-size: 0.8125rem;
+            border-top: 1px solid var(--border-subtle);
+            padding-top: 1.2rem;
+            margin-top: auto;
+        }
+
+        .view-link {
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 500;
+        }
+
+        .view-link svg {
+            width: 14px;
+            height: 14px;
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover .view-link svg {
+            transform: translateX(4px);
+        }
+
+        .tech-tags {
+            display: flex;
+            gap: 0.5rem;
+            color: var(--text-disabled);
+        }
+
+        /* Screen captures section */
+        .assets-section {
+            border-top: 1px solid var(--border-subtle);
+            padding-top: 4rem;
+            margin-top: 4rem;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 600;
+            letter-spacing: -0.03em;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .section-title span {
+            font-family: var(--font-mono);
+            font-size: 0.875rem;
+            color: var(--text-disabled);
+            font-weight: 400;
+        }
+
+        .assets-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 2rem;
+        }
+
+        .asset-card {
+            background-color: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: var(--transition-smooth);
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .asset-card:hover {
+            border-color: var(--border-hover);
+            transform: translateY(-4px);
+        }
+
+        .asset-img-container {
+            width: 100%;
+            height: 200px;
+            background-color: #020204;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .asset-img-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition-smooth);
+            filter: grayscale(40%);
+        }
+
+        .asset-card:hover .asset-img-container img {
+            transform: scale(1.05);
+            filter: grayscale(0%);
+        }
+
+        .asset-details {
+            padding: 1.5rem;
+        }
+
+        .asset-details h3 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .asset-details p {
+            font-size: 0.8125rem;
+            font-family: var(--font-mono);
+            color: var(--text-muted);
+        }
+
+        footer {
+            margin-top: 8rem;
+            border-top: 1px solid var(--border-subtle);
+            padding-top: 2rem;
+            text-align: center;
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--text-disabled);
+        }
+    </style>
+</head>
+<body>
+    <div class="noise"></div>
+    
+    <div class="container">
+        <header>
+            <div class="header-title">
+                <h1>ROKO</h1>
+                <p>Handoff Design & Prototype Explorer</p>
+            </div>
+            <div class="header-info">
+                Prototipos disponibles: <span>11 Versiones</span><br>
+                Handoff ID: <span>add971bd</span>
+            </div>
+        </header>
+
+        <!-- Filters -->
+        <div class="filters">
+            <button class="filter-btn active" data-filter="all">Todas las plantillas (11)</button>
+            <button class="filter-btn" data-filter="creative">Creative Portfolio (1)</button>
+            <button class="filter-btn" data-filter="premium">Premium Editions (4)</button>
+            <button class="filter-btn" data-filter="standard">Standard Editions (6)</button>
+        </div>
+
+        <!-- Grid -->
+        <div class="dashboard-grid" id="grid">
+            
+            <!-- Creative Portfolio -->
+            <a href="creative-portfolio.html" class="card creative" data-type="creative">
+                <div class="card-header">
+                    <span class="badge">Creative</span>
+                    <span class="screen-num">01 / 11</span>
+                </div>
+                <div class="card-body">
+                    <h2>Creative Portfolio</h2>
+                    <p>La experiencia inmersiva completa. Incluye preloader, cursor personalizado con mix-blend-mode, fondo WebGL dinámico con Three.js, y animaciones de scroll impulsadas por GSAP y Lenis.</p>
+                </div>
+                <div class="card-footer">
+                    <span class="view-link">
+                        Abrir Prototipo
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                    </span>
+                    <div class="tech-tags">GSAP / Lenis / Three.js</div>
+                </div>
+            </a>
+
+            <!-- Premium Portfolio v1 -->
+            <a href="roko-portfolio-premium.html" class="card premium" data-type="premium">
+                <div class="card-header">
+                    <span class="badge">Premium V1</span>
+                    <span class="screen-num">02 / 11</span>
+                </div>
+                <div class="card-body">
+                    <h2>Roko Premium Edition</h2>
+                    <p>Variación con sistema de diseño premium, overlays con efectos de ruido personalizado (noise grid), menú flotante animado, split hero panel interactivo y tipografía Space Mono.</p>
+                </div>
+                <div class="card-footer">
+                    <span class="view-link">
+                        Abrir Prototipo
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                    </span>
+                    <div class="tech-tags">Space Mono / Noise Grid</div>
+                </div>
+            </a>
+
+            <!-- Premium Portfolio v2 -->
+            <a href="roko-portfolio-premium-2.html" class="card premium" data-type="premium">
+                <div class="card-header">
+                    <span class="badge">Premium V2</span>
+                    <span class="screen-num">03 / 11</span>
+                </div>
+                <div class="card-body">
+                    <h2>Roko Premium V2</h2>
+                    <p>Segunda evolución de la versión Premium. Cuenta con optimizaciones de rendimiento en los canvas de partículas, estilos alternativos de bordes interactivos y transiciones expo aceleradas.</p>
+                </div>
+                <div class="card-footer">
+                    <span class="view-link">
+                        Abrir Prototipo
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                    </span>
+                    <div class="tech-tags">Particles / Glows</div>
+                </div>
+            </a>
+
+            <!-- Premium Portfolio v3 -->
+            <a href="roko-portfolio-premium-3.html" class="card premium" data-type="premium">
+                <div class="card-header">
+                    <span class="badge">Premium V3</span>
+                    <span class="screen-num">04 / 11</span>
+                </div>
+                <div class="card-body">
+                    <h2>Roko Premium V3</h2>
+                    <p>Tercera versión Premium. Incorpora una estructura visual de grid de fondo más pronunciada, layouts fluidos con CSS clamp, y un selector interactivo para filtrar proyectos.</p>
+                </div>
+                <div class="card-footer">
+                    <span class="view-link">
+                        Abrir Prototipo
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                    </span>
+                    <div class="tech-tags">Fluid Grid / Clamp</div>
+                </div>
+            </a>
+
+            <!-- Premium Portfolio v4 -->
+            <a href="roko-portfolio-premium-4.html" class="card premium" data-type="premium">
+                <div class="card-header">
+                    <span class="badge">Premium V4</span>
+                    <span class="screen-num">05 / 11</span>
+                </div>
+                <div class="card-body">
+                    <h2>Roko Premium V4</h2>
+                    <p>La máxima iteración Premium con integración avanzada de los contratos de responsividad, ajustes finos de tipografía y visuales diseñados para altas resoluciones.</p>
+                </div>
+                <div class="card-footer">
+                    <span class="view-link">
+                        Abrir Prototipo
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                    </span>
+                    <div class="tech-tags">Responsive Layout / HiDPI</div>
+                </div>
+            </a>
+
+            <!-- Standard Portfolio v1 -->
+            <a href="roko-portfolio.html" class="card standard" data-type="standard">
+                <div class="card-header">
+                    <span class="badge">Standard V1</span>
+                    <span class="screen-num">06 / 11</span>
+                </div>
+                <div class="card-body">
+                    <h2>Roko Standard V1</h2>
+                    <p>Diseño de portafolio minimalista estructurado, adaptado para cargas rápidas de red. Cuenta con layouts de rejilla y tipografía limpia en Space Mono.</p>
+                </div>
+                <div class="card-footer">
+                    <span class="view-link">
+                        Abrir Prototipo
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                    </span>
+                    <div class="tech-tags">Minimalist Grid / Mono</div>
+                </div>
+            </a>
+
+            <!-- Standard Portfolio v2 -->
+            <a href="roko-portfolio-2.html" class="card standard" data-type="standard">
+                <div class="card-header">
+                    <span class="badge">Standard V2</span>
+                    <span class="screen-num">07 / 11</span>
+                </div>
+                <div class="card-body">
+                    <h2>Roko Standard V2</h2>
+                    <p>Segunda variante estándar con pequeñas modificaciones en las animaciones de carga inicial (preloader) y ajustes en la interactividad de la lista de proyectos.</p>
+                </div>
+                <div class="card-footer">
+                    <span class="view-link">
+                        Abrir Prototipo
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                    </span>
+                    <div class="tech-tags">Preloader / Interactions</div>
+                </div>
+            </a>
+
+            <!-- Standard Portfolio v3 -->
+            <a href="roko-portfolio-3.html" class="card standard" data-type="standard">
+                <div class="card-header">
+                    <span class="badge">Standard V3</span>
+                    <span class="screen-num">08 / 11</span>
+                </div>
+                <div class="card-body">
+                    <h2>Roko Standard V3</h2>
+                    <p>Tercera variante estándar con optimizaciones en las consultas de medios (media queries) y comportamiento táctil mejorado para dispositivos móviles.</p>
+                </div>
+                <div class="card-footer">
+                    <span class="view-link">
+                        Abrir Prototipo
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                    </span>
+                    <div class="tech-tags">Mobile / Touch Support</div>
+                </div>
+            </a>
+
+            <!-- Standard Portfolio v4 -->
+            <a href="roko-portfolio-4.html" class="card standard" data-type="standard">
+                <div class="card-header">
+                    <span class="badge">Standard V4</span>
+                    <span class="screen-num">09 / 11</span>
+                </div>
+                <div class="card-body">
+                    <h2>Roko Standard V4</h2>
+                    <p>Variación con enfoque ultra-ligero y reducción de dependencias de scripts. Una versión muy optimizada a nivel de rendimiento y compatibilidad heredada.</p>
+                </div>
+                <div class="card-footer">
+                    <span class="view-link">
+                        Abrir Prototipo
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                    </span>
+                    <div class="tech-tags">Legacy / Ultra Light</div>
+                </div>
+            </a>
+
+            <!-- Standard Portfolio v5 -->
+            <a href="roko-portfolio-5.html" class="card standard" data-type="standard">
+                <div class="card-header">
+                    <span class="badge">Standard V5</span>
+                    <span class="screen-num">10 / 11</span>
+                </div>
+                <div class="card-body">
+                    <h2>Roko Standard V5</h2>
+                    <p>Quinta versión estándar. Introduce refinamientos específicos para la visualización del carrusel o listado de servicios prestados y el formulario de contacto.</p>
+                </div>
+                <div class="card-footer">
+                    <span class="view-link">
+                        Abrir Prototipo
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                    </span>
+                    <div class="tech-tags">Service Grid / Forms</div>
+                </div>
+            </a>
+
+            <!-- Standard Portfolio v6 -->
+            <a href="roko-portfolio-6.html" class="card standard" data-type="standard">
+                <div class="card-header">
+                    <span class="badge">Standard V6</span>
+                    <span class="screen-num">11 / 11</span>
+                </div>
+                <div class="card-body">
+                    <h2>Roko Standard V6</h2>
+                    <p>Última iteración de la línea estándar. Combina lo mejor de las optimizaciones ligeras con la interactividad y fluidez visual de los menús flotantes.</p>
+                </div>
+                <div class="card-footer">
+                    <span class="view-link">
+                        Abrir Prototipo
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                    </span>
+                    <div class="tech-tags">Optimized / Clean JS</div>
+                </div>
+            </a>
+
+        </div>
+
+        <!-- Reference Screens section -->
+        <div class="assets-section">
+            <h2 class="section-title">Capturas de Pantalla de Referencia <span>(Exportes de Diseño Original)</span></h2>
+            
+            <div class="assets-grid">
+                <a href="mqt1ljkv-screencapture-luisrokoarraez-base44-app-works-2026-06-25-01_08_07.png" target="_blank" class="asset-card">
+                    <div class="asset-img-container">
+                        <img src="mqt1ljkv-screencapture-luisrokoarraez-base44-app-works-2026-06-25-01_08_07.png" alt="Screencapture Luis Roko Arraez Base44 App Works">
+                    </div>
+                    <div class="asset-details">
+                        <h3>Captura Base 44</h3>
+                        <p>Ref: Luis Roko Arraez - App Works (PNG)</p>
+                    </div>
+                </a>
+                
+                <a href="mqt1vg2l-screencapture-luisrokoarraez-base44-app-works-prism-visual-campaign-2026-06-25-01_14_38.png" target="_blank" class="asset-card">
+                    <div class="asset-img-container">
+                        <img src="mqt1vg2l-screencapture-luisrokoarraez-base44-app-works-prism-visual-campaign-2026-06-25-01_14_38.png" alt="Screencapture Luis Roko Arraez Base44 App Works Prism Visual Campaign">
+                    </div>
+                    <div class="asset-details">
+                        <h3>Campaña Visual Prism</h3>
+                        <p>Ref: Prism Visual Campaign (PNG)</p>
+                    </div>
+                </a>
+                
+                <a href="mr2b62db-screencapture-luisrokoarraez-base44-app-works-prism-visual-campaign-2026-06-25-01_14_38.png" target="_blank" class="asset-card">
+                    <div class="asset-img-container">
+                        <img src="mr2b62db-screencapture-luisrokoarraez-base44-app-works-prism-visual-campaign-2026-06-25-01_14_38.png" alt="Screencapture Luis Roko Arraez Base44 App Works Prism Visual Campaign v2">
+                    </div>
+                    <div class="asset-details">
+                        <h3>Campaña Visual Prism V2</h3>
+                        <p>Ref: Prism Visual Campaign Alt (PNG)</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <footer>
+            <p>Antigravity Pair-Programming Workspace &copy; 2026. Todos los derechos reservados.</p>
+        </footer>
+    </div>
+
+    <!-- Filter JS Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const buttons = document.querySelectorAll('.filter-btn');
+            const cards = document.querySelectorAll('.card');
+
+            buttons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    // Update active button
+                    buttons.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+
+                    // Filter cards
+                    const filterValue = btn.getAttribute('data-filter');
+
+                    cards.forEach(card => {
+                        const type = card.getAttribute('data-type');
+                        if (filterValue === 'all' || type === filterValue) {
+                            card.style.display = 'flex';
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html>
