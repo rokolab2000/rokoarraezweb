@@ -4383,6 +4383,11 @@
         document.addEventListener('mouseenter', (e) => { 
             const card = e.target.closest('.project-card'); 
             if (card) { 
+                const container = card.closest('[data-view]');
+                const currentView = container ? container.getAttribute('data-view') : (localStorage.getItem('roko_project_view') || 'grid');
+                
+                // Show hover preview image ONLY in List view mode
+                if (currentView !== 'list') return; 
                 const color = card.dataset.color; 
                 const projectId = card.dataset.project;
                 const project = projects[projectId];
