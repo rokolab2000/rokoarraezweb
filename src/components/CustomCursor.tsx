@@ -1,13 +1,13 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 
-export const CustomCursor: React.FC = () => {
+export const CustomCursor: React.FC = React.memo(() => {
     const cursorRef = useRef<HTMLDivElement>(null);
-    const cursorInnerRef = useRef<HTMLDivElement>(null);
-    const [cursorText, setCursorText] = useState('');
+    const cursorTextRef = useRef<HTMLSpanElement>(null);
 
     useEffect(() => {
         const cursor = cursorRef.current;
+        const cursorTextEl = cursorTextRef.current;
         if (!cursor) return;
 
         // Add class to body to hide default cursor on desktop
@@ -39,21 +39,21 @@ export const CustomCursor: React.FC = () => {
 
         gsap.ticker.add(tickerFunc);
 
-        // Hover events delegation
+        // Hover events delegation (Direct DOM mutation to prevent React re-renders)
         const onMouseOver = (e: MouseEvent) => {
             const target = e.target as HTMLElement;
             const interactiveEl = target.closest('a, button, [data-hover], [data-view]');
             
             if (!interactiveEl) {
                 cursor.classList.remove('is-hover', 'is-view');
-                setCursorText('');
+                if (cursorTextEl) cursorTextEl.textContent = '';
                 return;
             }
 
             if (interactiveEl.hasAttribute('data-view')) {
                 cursor.classList.add('is-view');
                 const text = interactiveEl.getAttribute('data-view') || 'VIEW';
-                setCursorText(text);
+                if (cursorTextEl) cursorTextEl.textContent = text;
             } else {
                 cursor.classList.add('is-hover');
             }
@@ -61,7 +61,7 @@ export const CustomCursor: React.FC = () => {
 
         const onMouseOut = () => {
             cursor.classList.remove('is-hover', 'is-view');
-            setCursorText('');
+            if (cursorTextEl) cursorTextEl.textContent = '';
         };
 
         document.addEventListener('mouseover', onMouseOver);
@@ -78,9 +78,10 @@ export const CustomCursor: React.FC = () => {
 
     return (
         <div ref={cursorRef} className="cursor">
-            <div ref={cursorInnerRef} className="cursor__inner">
-                <span className="cursor__text">{cursorText}</span>
+            <div className="cursor__inner">
+                <span ref={cursorTextRef} className="cursor__text"></span>
             </div>
         </div>
     );
-};
+});
+
