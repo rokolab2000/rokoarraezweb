@@ -4399,10 +4399,12 @@
         panelRight?.addEventListener('mouseleave', () => panelRight.classList.remove('is-hovered'));
         panelLeft?.addEventListener('click', () => { navigateTo('works', 'grafico'); });
         panelRight?.addEventListener('click', () => { navigateTo('works', 'uxui'); });
-        setTimeout(() => { panelLeft?.classList.add('is-revealed'); panelRight?.classList.add('is-revealed'); }, 300);
-        setTimeout(() => document.getElementById('heroOverlay')?.classList.add('is-visible'), 600);
-        setTimeout(() => document.getElementById('heroBottomBar')?.classList.add('is-visible'), 800);
-        setTimeout(() => document.getElementById('heroScrollCue')?.classList.add('is-visible'), 1200);
+        // Immediate LCP Reveal for Hero Text Elements
+        panelLeft?.classList.add('is-revealed');
+        panelRight?.classList.add('is-revealed');
+        setTimeout(() => document.getElementById('heroOverlay')?.classList.add('is-visible'), 100);
+        setTimeout(() => document.getElementById('heroBottomBar')?.classList.add('is-visible'), 150);
+        setTimeout(() => document.getElementById('heroScrollCue')?.classList.add('is-visible'), 250);
 
         // ═══════════════════════════════════════════════════════════════════
         // NAVIGATION
@@ -4984,7 +4986,7 @@
                 thumbContainer.className = 'project-card__thumb-mobile';
                 
                 if (project.previewImage) {
-                    thumbContainer.innerHTML = `<img src="${escapeHTML(project.previewImage)}" alt="${escapeHTML(project.title)}" />`;
+                    thumbContainer.innerHTML = `<img src="${escapeHTML(project.previewImage)}" alt="${escapeHTML(project.title)}" loading="lazy" decoding="async" />`;
                 } else {
                     const color = card.dataset.color || 'purple';
                     thumbContainer.className = `project-card__thumb-mobile project-card__thumb-mobile--placeholder project-card__thumb-mobile--${color}`;
