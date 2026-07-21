@@ -1484,7 +1484,7 @@
                 grid-template-columns: repeat(2, 1fr);
             }
         }
-        @media (min-width: 1200px) {
+        @media (min-width: 1024px) {
             [data-view="grid"] .works-page__section,
             [data-view="grid"].category-block__grid,
             [data-view="grid"] .category-block__grid {
@@ -1556,10 +1556,10 @@
             }
         }
         [data-view="masonry"] .project-card {
-            break-inside: avoid;
-            display: inline-block;
+            display: flex;
+            flex-direction: column;
             width: 100%;
-            margin-bottom: 32px;
+            margin-bottom: 0;
             padding: 24px;
             border: 1px solid var(--border-base);
             border-radius: 16px;
