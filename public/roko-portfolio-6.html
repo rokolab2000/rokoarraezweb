@@ -2820,6 +2820,12 @@
     display: block !important;
 }
 
+
+.breadcrumb-link:hover {
+    color: var(--text-primary) !important;
+    text-decoration: underline !important;
+}
+
 </style>
 </head>
 <body>
@@ -4570,6 +4576,20 @@
         const menuTrigger = document.getElementById('menuTrigger');
         const menuOverlay = document.getElementById('menuOverlay');
 
+        
+        // Breadcrumbs Click Delegation Handler
+        document.body.addEventListener('click', (e) => {
+            const breadcrumbLink = e.target.closest('.breadcrumb-link');
+            if (breadcrumbLink) {
+                e.preventDefault();
+                const page = breadcrumbLink.dataset.breadcrumb;
+                const filter = breadcrumbLink.dataset.filter || null;
+                if (page && typeof navigateTo === 'function') {
+                    navigateTo(page, filter);
+                }
+            }
+        });
+
         function navigateTo(pageId, filter = null) {
             if (pageId === currentPage && !filter) return;
             pageTransition.classList.add('is-active');
@@ -4784,14 +4804,26 @@
 
                 <main class="project-detail__main">
                     <section class="hero project-detail__hero scroll-reveal">
-                        <!-- Breadcrumbs -->
-                        <div class="project-detail__breadcrumbs" style="margin-bottom: 20px; color: var(--text-muted); font-size: 13px; font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.08em; display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-                            <a href="#" class="breadcrumb-link" data-breadcrumb="home" style="color: var(--text-muted); text-decoration: none;" data-cursor="hover">Home</a>
-                            <span style="opacity: 0.4;">/</span>
-                            <a href="#" class="breadcrumb-link" data-breadcrumb="works" style="color: var(--text-muted); text-decoration: none;" data-cursor="hover">Proyectos</a>
-                            <span style="opacity: 0.4;">/</span>
-                            <span style="color: var(--${color}); font-weight: 700;">${escapeHTML(project.title)}</span>
-                        </div>
+                        <!-- Breadcrumbs (SEO & Interactive Navigation) -->
+                        <nav class="project-detail__breadcrumbs" aria-label="Breadcrumb" style="margin-bottom: 20px;">
+                            <ol style="list-style: none; display: flex; align-items: center; gap: 8px; margin: 0; padding: 0; flex-wrap: wrap; font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase;">
+                                <li>
+                                    <a href="#" class="breadcrumb-link" data-breadcrumb="home" data-cursor="hover" style="color: var(--text-muted); text-decoration: none; transition: color 0.2s ease;">Home</a>
+                                </li>
+                                <li style="opacity: 0.3; user-select: none;">/</li>
+                                <li>
+                                    <a href="#" class="breadcrumb-link" data-breadcrumb="works" data-filter="all" data-cursor="hover" style="color: var(--text-muted); text-decoration: none; transition: color 0.2s ease;">Proyectos</a>
+                                </li>
+                                <li style="opacity: 0.3; user-select: none;">/</li>
+                                <li>
+                                    <a href="#" class="breadcrumb-link" data-breadcrumb="works" data-filter="${color === 'turquoise' ? 'uxui' : 'grafico'}" data-cursor="hover" style="color: var(--text-muted); text-decoration: none; transition: color 0.2s ease;">${escapeHTML(project.category || (color === 'turquoise' ? 'Diseño UX/UI' : 'Diseño Gráfico'))}</a>
+                                </li>
+                                <li style="opacity: 0.3; user-select: none;">/</li>
+                                <li>
+                                    <span class="breadcrumb-current" style="color: var(--${color}); font-weight: 700;">${escapeHTML(project.title)}</span>
+                                </li>
+                            </ol>
+                        </nav>
                         <!-- H1: Título del Proyecto (SEO Friendly) -->
                         <h1 class="project-detail__title">${escapeHTML(project.title)}</h1>
                         <!-- P: Breve descripción estratégica -->
