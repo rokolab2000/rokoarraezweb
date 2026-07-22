@@ -3,25 +3,6 @@
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   
   <!-- Home / Portfolio Principal (Roko Standard V6) -->
-  <url>
-    <loc>https://rokoarraez.com/</loc>
-    <lastmod>2026-07-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>1.0</priority>
-    <image:image>
-      <image:loc>https://rokoarraez.com/roko_avatar.jpg</image:loc>
-      <image:title>Luis Roko Arraez - Product Designer &amp; UX/UI Specialist</image:title>
-    </image:image>
-  </url>
-
-  <!-- Explorador de Prototipos -->
-  <url>
-    <loc>https://rokoarraez.com/prototipos</loc>
-    <lastmod>2026-07-20</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
   <!-- Prototipos individuales estáticos -->
   <url>
     <loc>https://rokoarraez.com/roko-portfolio-6.html</loc>
