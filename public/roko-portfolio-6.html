@@ -5171,15 +5171,40 @@ img.gallery-real-img,
             contactForm.style.display = 'none';
             formSuccess?.classList.add('is-visible');
 
-            // Send mailto fallback to luisarraez66@gmail.com
+                        // Send via Web3Forms API to luisarraez66@gmail.com
             const name = document.getElementById('formName')?.value || '';
             const email = document.getElementById('formEmail')?.value || '';
+            const phone = document.getElementById('formPhone')?.value || '';
+            const project = document.getElementById('formProjectName')?.value || '';
+            const interest = document.getElementById('formInterest')?.value || '';
+            const priority = document.getElementById('formPriority')?.value || '';
+            const website = document.getElementById('formWebsite')?.value || '';
             const message = document.getElementById('formMessage')?.value || '';
-            const subject = encodeURIComponent(`Nuevo mensaje de contacto de ${name} (${email}) - rokoarraez.com`);
-            const body = encodeURIComponent(`Nombre: ${name}\nEmail: ${email}\nMensaje:\n${message}`);
-            setTimeout(() => {
-                window.location.href = `mailto:luisarraez66@gmail.com?subject=${subject}&body=${body}`;
-            }, 800);
+
+            const formData = new FormData();
+            formData.append('access_key', '2756865a-6b31-42a5-b8f8-ef2a6cbf21e7');
+            formData.append('subject', `Nuevo contacto de ${name} - rokoarraez.com`);
+            formData.append('from_name', 'rokoarraez.com Formulario de Contacto');
+            formData.append('name', name);
+            formData.append('email', email);
+            formData.append('phone', phone);
+            formData.append('project', project);
+            formData.append('interest', interest);
+            formData.append('priority', priority);
+            formData.append('website', website);
+            formData.append('message', message);
+
+            fetch('https://api.web3forms.com/submit', {
+                method: 'POST',
+                body: formData
+            })
+            .then(res => res.json())
+            .then(data => {
+                console.log('Web3Forms response:', data);
+            })
+            .catch(err => {
+                console.error('Web3Forms error:', err);
+            });
         });
 
         resetFormBtn?.addEventListener('click', () => {
@@ -5244,19 +5269,45 @@ img.gallery-real-img,
             }
             
             if (errorEl) errorEl.style.display = 'none';
-            contactFormBio.style.display = 'none';
+                        contactFormBio.style.display = 'none';
             formSuccessBio?.classList.add('is-visible');
 
-            // Send mailto fallback to luisarraez66@gmail.com
-            const name = document.getElementById('formNameBio')?.value || '';
-            const email = document.getElementById('formEmailBio')?.value || '';
-            const message = document.getElementById('formMessageBio')?.value || '';
-            const subject = encodeURIComponent(`Nuevo mensaje de contacto de ${name} (${email}) - rokoarraez.com`);
-            const body = encodeURIComponent(`Nombre: ${name}\nEmail: ${email}\nMensaje:\n${message}`);
-            setTimeout(() => {
-                window.location.href = `mailto:luisarraez66@gmail.com?subject=${subject}&body=${body}`;
-            }, 800);
+            // Send via Web3Forms API to luisarraez66@gmail.com
+            const nameBio = document.getElementById('formNameBio')?.value || '';
+            const emailBio = document.getElementById('formEmailBio')?.value || '';
+            const phoneBio = document.getElementById('formPhoneBio')?.value || '';
+            const projectBio = document.getElementById('formProjectNameBio')?.value || '';
+            const interestBio = document.getElementById('formInterestBio')?.value || '';
+            const priorityBio = document.getElementById('formPriorityBio')?.value || '';
+            const websiteBio = document.getElementById('formWebsiteBio')?.value || '';
+            const messageBio = document.getElementById('formMessageBio')?.value || '';
+
+            const formDataBio = new FormData();
+            formDataBio.append('access_key', '2756865a-6b31-42a5-b8f8-ef2a6cbf21e7');
+            formDataBio.append('subject', `Nuevo contacto de ${nameBio} - System Bio rokoarraez.com`);
+            formDataBio.append('from_name', 'rokoarraez.com System Bio Form');
+            formDataBio.append('name', nameBio);
+            formDataBio.append('email', emailBio);
+            formDataBio.append('phone', phoneBio);
+            formDataBio.append('project', projectBio);
+            formDataBio.append('interest', interestBio);
+            formDataBio.append('priority', priorityBio);
+            formDataBio.append('website', websiteBio);
+            formDataBio.append('message', messageBio);
+
+            fetch('https://api.web3forms.com/submit', {
+                method: 'POST',
+                body: formDataBio
+            })
+            .then(res => res.json())
+            .then(data => {
+                console.log('Web3Forms Bio response:', data);
+            })
+            .catch(err => {
+                console.error('Web3Forms Bio error:', err);
+            });
         });
+
 
         resetFormBtnBio?.addEventListener('click', () => {
             contactFormBio?.reset();
